@@ -64,7 +64,8 @@
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                             <stripVersion>true</stripVersion>
                             <includeArtifactIds>
-                                grpc-testing
+                                grpc-testing,
+                                grpc-inprocess
                             </includeArtifactIds>
                         </configuration>
                         <goals>
@@ -72,6 +73,17 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>lib</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
