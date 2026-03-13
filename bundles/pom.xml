@@ -44,6 +44,8 @@
         <grpc.version>1.76.0</grpc.version>
         <perfmark-api.version>0.26.0</perfmark-api.version>
         <protobuf.version>4.30.2</protobuf.version>
+
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <dependencyManagement>
@@ -169,8 +171,7 @@
                     <artifactId>tycho-compiler-plugin</artifactId>
                     <version>${tycho-version}</version>
                     <configuration>
-                        <source>21</source>
-                        <target>21</target>
+                        <release>${maven.compiler.release}</release>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <requireJREPackageImports>true</requireJREPackageImports>
