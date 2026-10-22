@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.container.orchestration.ContainerConfiguration;
 import org.eclipse.kura.container.orchestration.ContainerInstanceDescriptor;
@@ -54,7 +53,7 @@ public class TritonServerContainerManagerTest {
     private static final String TRITON_INTERNAL_BACKENDS_FOLDER = "/backends";
     private static final String TRITON_BACKENDS_PATH = "/path/to/backends";
 
-    private static final Integer[] EXTERNAL_PORTS = new Integer[] { 4000, 4001, 4002 };
+    private static final Integer[] EXTERNAL_PORTS = new Integer[] {4000, 4001, 4002};
     private static final List<ContainerPort> CONTAINER_PORTS = new ArrayList<>(
             Arrays.asList(new ContainerPort(8000, 4000), new ContainerPort(8001, 4001), new ContainerPort(8002, 4002)));
 
@@ -66,6 +65,7 @@ public class TritonServerContainerManagerTest {
 
     @Captor
     ArgumentCaptor<ContainerConfiguration> configurationCaptor = ArgumentCaptor.forClass(ContainerConfiguration.class);
+
     private ContainerConfiguration capturedContainerConfig;
 
     @Test
@@ -394,10 +394,12 @@ public class TritonServerContainerManagerTest {
         thenContainerConfigurationImageEquals(TRITON_IMAGE_NAME);
         thenContainerConfigurationImageTagEquals(TRITON_IMAGE_TAG);
         thenContainerConfigurationNameEquals(TRITON_CONTAINER_NAME);
-        thenContainerConfigurationVolumesEquals(Stream
-                .of(new String[][] { { TRITON_REPOSITORY_PATH, TRITON_INTERNAL_MODEL_REPO },
-                        { TRITON_BACKENDS_PATH, TRITON_INTERNAL_BACKENDS_FOLDER }, })
-                .collect(Collectors.collectingAndThen(Collectors.toMap(data -> data[0], data -> data[1]),
+        thenContainerConfigurationVolumesEquals(Stream.of(new String[][] {
+                    {TRITON_REPOSITORY_PATH, TRITON_INTERNAL_MODEL_REPO},
+                    {TRITON_BACKENDS_PATH, TRITON_INTERNAL_BACKENDS_FOLDER},
+                })
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(data -> data[0], data -> data[1]),
                         Collections::<String, String>unmodifiableMap)));
         thenContainerConfigurationEntrypointOverrideContains("--model-control-mode=explicit");
     }
@@ -481,8 +483,8 @@ public class TritonServerContainerManagerTest {
         when(this.orc.listContainerDescriptors()).thenReturn(Arrays.asList());
     }
 
-    private void givenLocalManagerBuiltWith(TritonServerServiceOptions options, ContainerOrchestrationService orc,
-            String decryptionFolder) {
+    private void givenLocalManagerBuiltWith(
+            TritonServerServiceOptions options, ContainerOrchestrationService orc, String decryptionFolder) {
         this.manager = new TritonServerContainerManager(options, orc, decryptionFolder);
     }
 
@@ -632,11 +634,12 @@ public class TritonServerContainerManagerTest {
     }
 
     private void thenContainerConfigurationDevicesIsFilled(boolean expectedResult) {
-        assertEquals(expectedResult, !this.capturedContainerConfig.getContainerDevices().isEmpty());
+        assertEquals(
+                expectedResult,
+                !this.capturedContainerConfig.getContainerDevices().isEmpty());
     }
 
     private void thenContainerConfigurationDevicesEquals(List<String> expectedDevices) {
         assertEquals(expectedDevices, this.capturedContainerConfig.getContainerDevices());
     }
-
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -22,7 +22,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.core.linux.executor.LinuxSignal;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -34,7 +33,7 @@ public class TritonServerNativeManager implements TritonServerInstanceManager {
     private static final Logger logger = LoggerFactory.getLogger(TritonServerNativeManager.class);
 
     private static final int MONITOR_PERIOD = 30;
-    private static final String[] TRITONSERVER = new String[] { "tritonserver" };
+    private static final String[] TRITONSERVER = new String[] {"tritonserver"};
 
     private final String decryptionFolderPath;
     private final CommandExecutorService commandExecutorService;
@@ -44,8 +43,10 @@ public class TritonServerNativeManager implements TritonServerInstanceManager {
     private ScheduledExecutorService scheduledExecutorService;
     private ScheduledFuture<?> scheduledFuture;
 
-    protected TritonServerNativeManager(TritonServerServiceOptions options,
-            CommandExecutorService commandExecutorService, String decryptionFolderPath) {
+    protected TritonServerNativeManager(
+            TritonServerServiceOptions options,
+            CommandExecutorService commandExecutorService,
+            String decryptionFolderPath) {
         this.options = options;
         this.commandExecutorService = commandExecutorService;
         this.decryptionFolderPath = decryptionFolderPath;
@@ -71,12 +72,16 @@ public class TritonServerNativeManager implements TritonServerInstanceManager {
 
     private void startLocalServerMonitor() {
         this.serverCommand = createServerCommand();
-        this.scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(() -> {
-            Thread.currentThread().setName(getClass().getSimpleName());
-            if (!isServerRunning()) {
-                startLocalServer();
-            }
-        }, 0, MONITOR_PERIOD, TimeUnit.SECONDS);
+        this.scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(
+                () -> {
+                    Thread.currentThread().setName(getClass().getSimpleName());
+                    if (!isServerRunning()) {
+                        startLocalServer();
+                    }
+                },
+                0,
+                MONITOR_PERIOD,
+                TimeUnit.SECONDS);
     }
 
     private void startLocalServer() {
@@ -84,16 +89,24 @@ public class TritonServerNativeManager implements TritonServerInstanceManager {
             if (status.getExitStatus().isSuccessful()) {
                 logger.info("Nvidia Triton Server gracefully shutdown");
             } else {
-                logger.info("Nvidia Triton Server not started. Exit value: {}", status.getExitStatus().getExitCode());
+                logger.info(
+                        "Nvidia Triton Server not started. Exit value: {}",
+                        status.getExitStatus().getExitCode());
             }
             if (logger.isDebugEnabled()) {
-                logger.debug("execute command {} :: exited with code - {}", this.serverCommand,
+                logger.debug(
+                        "execute command {} :: exited with code - {}",
+                        this.serverCommand,
                         status.getExitStatus().getExitCode());
-                logger.debug("execute stderr {}",
-                        new String(((ByteArrayOutputStream) this.serverCommand.getErrorStream()).toByteArray(),
+                logger.debug(
+                        "execute stderr {}",
+                        new String(
+                                ((ByteArrayOutputStream) this.serverCommand.getErrorStream()).toByteArray(),
                                 StandardCharsets.UTF_8));
-                logger.debug("execute stdout {}",
-                        new String(((ByteArrayOutputStream) this.serverCommand.getOutputStream()).toByteArray(),
+                logger.debug(
+                        "execute stdout {}",
+                        new String(
+                                ((ByteArrayOutputStream) this.serverCommand.getOutputStream()).toByteArray(),
                                 StandardCharsets.UTF_8));
             }
         });
@@ -187,5 +200,4 @@ public class TritonServerNativeManager implements TritonServerInstanceManager {
         logger.debug("Triton command: {}", commandString);
         return command;
     }
-
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -25,7 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.container.orchestration.ContainerConfiguration;
@@ -59,8 +58,10 @@ public class TritonServerContainerManager implements TritonServerInstanceManager
     private ScheduledExecutorService scheduledExecutorService;
     private ScheduledFuture<?> scheduledFuture;
 
-    protected TritonServerContainerManager(TritonServerServiceOptions options,
-            ContainerOrchestrationService containerOrchestrationService, String decryptionFolderPath) {
+    protected TritonServerContainerManager(
+            TritonServerServiceOptions options,
+            ContainerOrchestrationService containerOrchestrationService,
+            String decryptionFolderPath) {
         this.options = options;
         this.containerOrchestrationService = containerOrchestrationService;
         this.decryptionFolderPath = decryptionFolderPath;
@@ -89,12 +90,16 @@ public class TritonServerContainerManager implements TritonServerInstanceManager
     }
 
     private void startContainerServerMonitor() {
-        this.scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(() -> {
-            Thread.currentThread().setName(getClass().getSimpleName());
-            if (!isServerRunning()) {
-                startLocalServer();
-            }
-        }, 0, MONITOR_PERIOD, TimeUnit.SECONDS);
+        this.scheduledFuture = this.scheduledExecutorService.scheduleAtFixedRate(
+                () -> {
+                    Thread.currentThread().setName(getClass().getSimpleName());
+                    if (!isServerRunning()) {
+                        startLocalServer();
+                    }
+                },
+                0,
+                MONITOR_PERIOD,
+                TimeUnit.SECONDS);
     }
 
     private void startLocalServer() {
@@ -156,9 +161,10 @@ public class TritonServerContainerManager implements TritonServerInstanceManager
     @Override
     public boolean isServerRunning() {
         try {
-            final Optional<ContainerInstanceDescriptor> existingInstance = this.containerOrchestrationService
-                    .listContainerDescriptors().stream().filter(c -> c.getContainerName().equals(TRITON_CONTAINER_NAME))
-                    .findAny();
+            final Optional<ContainerInstanceDescriptor> existingInstance =
+                    this.containerOrchestrationService.listContainerDescriptors().stream()
+                            .filter(c -> c.getContainerName().equals(TRITON_CONTAINER_NAME))
+                            .findAny();
 
             if (!existingInstance.isPresent()) {
                 return false;
@@ -188,16 +194,16 @@ public class TritonServerContainerManager implements TritonServerInstanceManager
                     && imageDescriptor.getImageTag().equals(this.options.getContainerImageTag())) {
                 return true;
             }
-
         }
 
         return false;
     }
 
     private String getContainerID() throws KuraException {
-        final Optional<ContainerInstanceDescriptor> existingInstance = this.containerOrchestrationService
-                .listContainerDescriptors().stream().filter(c -> c.getContainerName().equals(TRITON_CONTAINER_NAME))
-                .findAny();
+        final Optional<ContainerInstanceDescriptor> existingInstance =
+                this.containerOrchestrationService.listContainerDescriptors().stream()
+                        .filter(c -> c.getContainerName().equals(TRITON_CONTAINER_NAME))
+                        .findAny();
 
         if (!existingInstance.isPresent()) {
             throw new KuraException(KuraErrorCode.NOT_FOUND, "Can't find Kura-managed Triton server container");
@@ -234,7 +240,8 @@ public class TritonServerContainerManager implements TritonServerInstanceManager
         builder.setContainerName(TRITON_CONTAINER_NAME);
         builder.setFrameworkManaged(TRITON_FRAMEWORK_MANAGED);
         builder.setLoggingType(TRITON_LOGGING_TYPE);
-        builder.setContainerPorts(parseContainerPorts(TRITON_INTERNAL_PORTS,
+        builder.setContainerPorts(parseContainerPorts(
+                TRITON_INTERNAL_PORTS,
                 Arrays.asList(this.options.getHttpPort(), this.options.getGrpcPort(), this.options.getMetricsPort())));
 
         builder.setMemory(this.options.getContainerMemory());

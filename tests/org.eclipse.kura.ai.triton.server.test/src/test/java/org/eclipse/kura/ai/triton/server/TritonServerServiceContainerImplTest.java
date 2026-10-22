@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -16,19 +16,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.eclipse.kura.KuraException;
 import org.junit.After;
 import org.junit.Test;
-
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 
 public class TritonServerServiceContainerImplTest extends TritonServerServiceStepDefinitions {
 
@@ -44,7 +42,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenTritonServerServiceContainerImpl(this.properties, false);
 
         thenIsConfigurationValidReturns(true);
@@ -55,7 +53,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", null);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenTritonServerServiceContainerImpl(this.properties, false);
 
         thenIsConfigurationValidReturns(false);
@@ -66,7 +64,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", null);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenTritonServerServiceContainerImpl(this.properties, false);
 
         thenIsConfigurationValidReturns(false);
@@ -77,7 +75,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", "");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenTritonServerServiceContainerImpl(this.properties, false);
 
         thenIsConfigurationValidReturns(false);
@@ -88,7 +86,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenTritonServerServiceContainerImpl(this.properties, false);
 
         thenIsModelEncryptionEnabled(false);
@@ -99,7 +97,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("local.model.repository.password", "keyboards");
         givenTritonServerServiceContainerImpl(this.properties, false);
 
@@ -111,7 +109,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.metrics", Boolean.FALSE);
         givenTritonServerServiceContainerImpl(this.properties, true);
         givenMetricsServerWithResponse("/metrics", 4002, TRITON_METRICS_RESPONSE, 200);
@@ -126,7 +124,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.metrics", Boolean.TRUE);
         givenTritonServerServiceContainerImpl(this.properties, false);
         givenMetricsServerWithResponse("/metrics", 4002, TRITON_METRICS_RESPONSE, 500);
@@ -141,7 +139,7 @@ public class TritonServerServiceContainerImplTest extends TritonServerServiceSte
         givenPropertyWith("container.image", TRITON_IMAGE_NAME);
         givenPropertyWith("container.image.tag", TRITON_IMAGE_TAG);
         givenPropertyWith("local.model.repository.path", TRITON_REPOSITORY_PATH);
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.metrics", Boolean.TRUE);
         givenTritonServerServiceContainerImpl(this.properties, true);
         givenMetricsServerWithResponse("/metrics", 4002, TRITON_METRICS_RESPONSE, 200);

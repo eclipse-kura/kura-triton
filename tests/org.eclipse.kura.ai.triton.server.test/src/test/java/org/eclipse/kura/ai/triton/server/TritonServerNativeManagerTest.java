@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import static org.junit.Assert.assertEquals;
@@ -25,7 +24,6 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import org.eclipse.kura.core.linux.executor.LinuxSignal;
 import org.eclipse.kura.executor.Command;
 import org.eclipse.kura.executor.CommandExecutorService;
@@ -35,7 +33,7 @@ import org.mockito.ArgumentCaptor;
 
 public class TritonServerNativeManagerTest {
 
-    private static final String[] TRITONSERVERCMD = new String[] { "tritonserver" };
+    private static final String[] TRITONSERVERCMD = new String[] {"tritonserver"};
     private static final String MOCK_DECRYPT_FOLDER = "testDecryptionFolder";
 
     private Map<String, Object> properties = new HashMap<>();
@@ -49,7 +47,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void killMethodShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -66,7 +64,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void stopMethodShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -83,7 +81,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void isServerRunningWorksWhenRunning() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -98,7 +96,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void isServerRunningWorksWhenNotRunning() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -113,7 +111,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void decryptionFolderIsUsedOnlyForEncryptedModels() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenPropertyWith("local.model.repository.password", "password123");
         givenPropertyWith("local.model.repository.path", "modelRepositoryPath");
@@ -133,7 +131,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void backendConfigurationIsCorrectlyUsedOnStart() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenPropertyWith("local.backends.config", "testConfiguration");
         givenPropertyWith("local.model.repository.path", "modelRepositoryPath");
@@ -153,7 +151,7 @@ public class TritonServerNativeManagerTest {
     @Test
     public void nativeMetricsOptionsAreCorrectlySet() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenPropertyWith("enable.metrics", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
@@ -186,11 +184,11 @@ public class TritonServerNativeManagerTest {
     }
 
     private void givenMockCommandExecutionServiceReturnsTritonIsRunning(boolean expectedState) {
-        when(this.ces.isRunning(new String[] { "tritonserver" })).thenReturn(expectedState);
+        when(this.ces.isRunning(new String[] {"tritonserver"})).thenReturn(expectedState);
     }
 
-    private void givenLocalManagerBuiltWith(TritonServerServiceOptions options, CommandExecutorService ces,
-            String decryptionFolder) {
+    private void givenLocalManagerBuiltWith(
+            TritonServerServiceOptions options, CommandExecutorService ces, String decryptionFolder) {
         this.manager = new TritonServerNativeManager(options, ces, decryptionFolder);
     }
 
@@ -239,5 +237,4 @@ public class TritonServerNativeManagerTest {
     private void thenNoExceptionOccurred() {
         assertFalse(this.exceptionOccurred);
     }
-
 }

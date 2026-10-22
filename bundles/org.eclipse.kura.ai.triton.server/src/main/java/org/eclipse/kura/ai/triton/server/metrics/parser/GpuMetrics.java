@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2025, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -12,15 +12,15 @@
  ******************************************************************************/
 package org.eclipse.kura.ai.triton.server.metrics.parser;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.annotations.SerializedName;
 
 public class GpuMetrics {
 
     @SerializedName(value = "gpuUuid")
     private final String uuid;
+
     @SerializedName(value = "gpuStats")
     private final Map<String, String> metrics;
 

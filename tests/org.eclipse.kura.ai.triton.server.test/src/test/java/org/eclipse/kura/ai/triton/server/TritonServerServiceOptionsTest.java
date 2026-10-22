@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class TritonServerServiceOptionsTest {
@@ -36,7 +34,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void portGettersShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -60,7 +58,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void isLocalGetterShouldWorkWithLocal() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -70,7 +68,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void isLocalGetterShouldWorkWithRemote() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -80,7 +78,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void isLocalGetterShouldWorkWithNullProperty() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", null);
         givenServiceOptionsBuiltWith(properties);
 
@@ -90,7 +88,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void timeoutGettersShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", 5);
         givenServiceOptionsBuiltWith(properties);
@@ -103,7 +101,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void timeoutGettersShouldWorkWithNullProperty() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(properties);
@@ -116,7 +114,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void equalsMethodShouldWorkWithSameOptions() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
@@ -129,7 +127,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void equalsMethodShouldWorkWithNullArgument() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
@@ -142,7 +140,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void equalsMethodShouldWorkWithOptionsBuiltWithSameProperties() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
@@ -156,13 +154,13 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void equalsMethodShouldWorkWithOptionsBuiltWithDifferentProperties() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
 
         givenPropertyWith("server.address", "192.168.1.66");
-        givenPropertyWith("server.ports", new Integer[] { 5000, 5001, 5002 });
+        givenPropertyWith("server.ports", new Integer[] {5000, 5001, 5002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenPropertyWith("timeout", 60);
         givenOtherServiceOptionsBuiltWith(this.properties);
@@ -175,7 +173,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void hashCodeMethodShouldWorkWithOptionsBuiltWithSameProperties() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
@@ -190,13 +188,13 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void hashCodeMethodShouldWorkWithOptionsBuiltWithDifferentProperties() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("timeout", null);
         givenServiceOptionsBuiltWith(this.properties);
 
         givenPropertyWith("server.address", "192.168.1.66");
-        givenPropertyWith("server.ports", new Integer[] { 5000, 5001, 5002 });
+        givenPropertyWith("server.ports", new Integer[] {5000, 5001, 5002});
         givenPropertyWith("enable.local", Boolean.TRUE);
         givenPropertyWith("timeout", 60);
         givenOtherServiceOptionsBuiltWith(this.properties);
@@ -210,7 +208,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void shouldReturnInputGrpcMaxMessageSize() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("grpc.max.size", 2000);
         givenServiceOptionsBuiltWith(this.properties);
@@ -221,7 +219,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void shouldReturnDefaultGrpcMaxMessageSize() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("grpc.max.size", null);
         givenServiceOptionsBuiltWith(this.properties);
@@ -232,7 +230,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void shouldReturnNotPresentForOptionalParametersIfNotSet() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.cpus", null);
         givenServiceOptionsBuiltWith(properties);
@@ -245,7 +243,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerCpusPropertyShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.cpus", 1.78F);
         givenServiceOptionsBuiltWith(properties);
@@ -257,7 +255,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerGpusPropertyShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.gpus", "2");
         givenServiceOptionsBuiltWith(properties);
@@ -269,7 +267,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerGpusPropertyShouldWorkWithAll() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.gpus", "all");
         givenServiceOptionsBuiltWith(properties);
@@ -281,7 +279,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerMemoryPropertyShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.memory", "1234");
         givenServiceOptionsBuiltWith(properties);
@@ -293,7 +291,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerMemoryPropertyShouldWorkWithByteSuffix() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.memory", "12345b");
         givenServiceOptionsBuiltWith(properties);
@@ -305,7 +303,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerMemoryPropertyShouldWorkWithKiloSuffix() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.memory", "1111k");
         givenServiceOptionsBuiltWith(properties);
@@ -317,7 +315,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerMemoryPropertyShouldWorkWithMegaSuffix() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.memory", "2222m");
         givenServiceOptionsBuiltWith(properties);
@@ -329,7 +327,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerMemoryPropertyShouldWorkWithGigaSuffix() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.memory", "7g");
         givenServiceOptionsBuiltWith(properties);
@@ -341,7 +339,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerRuntimePropertyShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("container.runtime", "myCoolRuntime");
         givenServiceOptionsBuiltWith(properties);
@@ -353,7 +351,7 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerRuntimePropertyShouldNotBePresent() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -363,19 +361,19 @@ public class TritonServerServiceOptionsTest {
     @Test
     public void containerDevicesPropertyShouldWork() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenPropertyWith("devices", "/dev/tty1,/dev/video0");
         givenServiceOptionsBuiltWith(properties);
 
         thenDeviceListIsFilled(true);
-        thenDeviceListContains(Arrays.asList(new String[] { "/dev/tty1", "/dev/video0" }));
+        thenDeviceListContains(Arrays.asList(new String[] {"/dev/tty1", "/dev/video0"}));
     }
 
     @Test
     public void containerDevicesPropertyShouldBeEmpty() {
         givenPropertyWith("server.address", "localhost");
-        givenPropertyWith("server.ports", new Integer[] { 4000, 4001, 4002 });
+        givenPropertyWith("server.ports", new Integer[] {4000, 4001, 4002});
         givenPropertyWith("enable.local", Boolean.FALSE);
         givenServiceOptionsBuiltWith(properties);
 
@@ -510,5 +508,4 @@ public class TritonServerServiceOptionsTest {
     private void thenMetricsAreEnabled(boolean expectedResult) {
         assertEquals(expectedResult, this.options.areMetricsEnabled());
     }
-
 }

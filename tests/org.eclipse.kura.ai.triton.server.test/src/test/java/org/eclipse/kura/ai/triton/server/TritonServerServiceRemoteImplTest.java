@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Eurotech and/or its affiliates and others
+ * Copyright (c) 2022, 2026 Eurotech and/or its affiliates and others
  *
  * This program and the accompanying materials are made
  * available under the terms of the Eclipse Public License 2.0
@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDefinitions {
@@ -49,7 +48,7 @@ public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDe
     private Map<String, Object> invalidRemoteProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4000, 4001, 4002 });
+        properties.put("server.ports", new Integer[] {4000, 4001, 4002});
         properties.put("server.address", "");
 
         return properties;
@@ -65,5 +64,4 @@ public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDe
     private void thenIsModelEncryptionEnabled(boolean expectedValue) {
         assertEquals(expectedValue, this.tritonServerService.isModelEncryptionEnabled());
     }
-
 }
