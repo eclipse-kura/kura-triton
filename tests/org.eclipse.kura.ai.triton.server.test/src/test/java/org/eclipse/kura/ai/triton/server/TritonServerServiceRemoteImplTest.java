@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDefinitions {
@@ -49,7 +48,7 @@ public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDe
     private Map<String, Object> invalidRemoteProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4000, 4001, 4002 });
+        properties.put("server.ports", new Integer[] {4000, 4001, 4002});
         properties.put("server.address", "");
 
         return properties;
@@ -65,5 +64,4 @@ public class TritonServerServiceRemoteImplTest extends TritonServerServiceStepDe
     private void thenIsModelEncryptionEnabled(boolean expectedValue) {
         assertEquals(expectedValue, this.tritonServerService.isModelEncryptionEnabled());
     }
-
 }

@@ -13,7 +13,6 @@
 package org.eclipse.kura.ai.triton.server;
 
 import java.io.IOException;
-
 import org.eclipse.kura.KuraException;
 import org.junit.Test;
 
@@ -71,7 +70,6 @@ public class TritonServerServiceModelTest extends TritonServerServiceStepDefinit
         whenGetModelNames();
 
         thenListIsNotEmpty();
-
     }
 
     @Test
@@ -82,5 +80,4 @@ public class TritonServerServiceModelTest extends TritonServerServiceStepDefinit
 
         thenModelInfoExists();
     }
-
 }

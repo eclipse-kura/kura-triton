@@ -13,7 +13,6 @@
 package org.eclipse.kura.ai.triton.server;
 
 public enum DataType {
-
     BOOL,
     INT8,
     INT16,
@@ -27,5 +26,4 @@ public enum DataType {
     FP32,
     FP64,
     BYTES;
-
 }

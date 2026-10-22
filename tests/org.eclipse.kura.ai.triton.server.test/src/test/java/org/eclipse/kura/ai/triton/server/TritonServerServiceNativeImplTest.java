@@ -17,7 +17,6 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 
 public class TritonServerServiceNativeImplTest extends TritonServerServiceStepDefinitions {
@@ -81,7 +80,7 @@ public class TritonServerServiceNativeImplTest extends TritonServerServiceStepDe
     private Map<String, Object> validNativeProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4001, 4002, 4003 });
+        properties.put("server.ports", new Integer[] {4001, 4002, 4003});
         properties.put("local.backends.path", "/fake-backends-path");
         properties.put("local.model.repository.path", "/fake-repository-path");
 
@@ -91,7 +90,7 @@ public class TritonServerServiceNativeImplTest extends TritonServerServiceStepDe
     private Map<String, Object> validEncryptionNativeProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4001, 4002, 4003 });
+        properties.put("server.ports", new Integer[] {4001, 4002, 4003});
         properties.put("local.backends.path", "/fake-backends-path");
         properties.put("local.model.repository.path", "/fake-repository-path");
         properties.put("local.model.repository.password", "hutini");
@@ -109,5 +108,4 @@ public class TritonServerServiceNativeImplTest extends TritonServerServiceStepDe
     private void thenIsModelEncryptionEnabled(boolean expectedValue) {
         assertEquals(expectedValue, this.tritonServerService.isModelEncryptionEnabled());
     }
-
 }

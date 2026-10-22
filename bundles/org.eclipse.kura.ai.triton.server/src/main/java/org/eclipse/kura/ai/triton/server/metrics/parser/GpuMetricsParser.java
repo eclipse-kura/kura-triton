@@ -12,14 +12,13 @@
  ******************************************************************************/
 package org.eclipse.kura.ai.triton.server.metrics.parser;
 
+import com.google.common.base.CaseFormat;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.google.common.base.CaseFormat;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class GpuMetricsParser {
 
@@ -61,8 +60,9 @@ public class GpuMetricsParser {
      */
     public Map<String, String> parse() {
         Map<String, String> metrics = new HashMap<>();
-        this.rawMetrics.stream().filter(
-                line -> !line.startsWith("#") && (line.contains("_gpu_") || line.equals("nv_energy_consumption")))
+        this.rawMetrics.stream()
+                .filter(line ->
+                        !line.startsWith("#") && (line.contains("_gpu_") || line.equals("nv_energy_consumption")))
                 .forEach(line -> {
                     Optional<String> uuid = parseUuid(line);
                     Optional<String> name = parseName(line);
@@ -71,12 +71,14 @@ public class GpuMetricsParser {
                         return;
                     }
                     if (this.gpuMetricsMap.containsKey(uuid.get())) {
-                        this.gpuMetricsMap.get(uuid.get()).addGpuMetric(
-                                CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name.get()), value);
+                        this.gpuMetricsMap
+                                .get(uuid.get())
+                                .addGpuMetric(
+                                        CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name.get()), value);
                     } else {
                         GpuMetrics gpuMetrics = new GpuMetrics(uuid.get());
-                        gpuMetrics.addGpuMetric(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name.get()),
-                                value);
+                        gpuMetrics.addGpuMetric(
+                                CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name.get()), value);
                         this.gpuMetricsMap.put(uuid.get(), gpuMetrics);
                     }
                 });
@@ -113,5 +115,4 @@ public class GpuMetricsParser {
         }
         return value;
     }
-
 }

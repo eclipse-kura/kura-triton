@@ -126,19 +126,21 @@ public class TritonServerServiceConstants {
                     + "# HELP nv_energy_consumption GPU energy consumption in joules since the Triton Server started\n" //
                     + "# TYPE nv_energy_consumption counter\n" //
                     + "nv_energy_consumption{gpu_uuid=\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\"} 320.387000\n";
-    protected static final String TRITON_EXPECTED_METRICS = "gpu.metrics.GPU-340cec52-80ba-c0df-8511-5f9680aae0ff {\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
-            + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}" //
-            + " gpu.metrics.GPU-340cec52-80ba-c0df-8511-5f9680aae0ed {\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ed\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
-            + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}";
-    protected static final String TRITON_EXPECTED_STATS = "model.metrics.identity_long.1 {\"name\":\"identity_long\",\"version\":\"1\",\"lastInference\":\"1739867342484\"," //
-            + "\"inferenceCount\":\"42\",\"executionCount\":\"42\",\"inferenceStats\":{\"success\":{\"count\":\"42\",\"ns\":\"30097440\"},\"fail\":{\"count\":\"0\",\"ns\":\"0\"}," //
-            + "\"queue\":{\"count\":\"42\",\"ns\":\"7137056\"},\"computeInput\":{\"count\":\"42\",\"ns\":\"532768\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"4664640\"}," //
-            + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"4736\"},\"cacheHit\":{\"count\":\"0\",\"ns\":\"0\"},\"cacheMiss\":{\"count\":\"0\",\"ns\":\"0\"}}," //
-            + "\"batchStats\":[{\"batchSize\":\"1\",\"computeInput\":{\"count\":\"42\",\"ns\":\"532768\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"4664640\"}," //
-            + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"4736\"}}],\"memoryUsage\":[],\"responseStats\":{}} model.metrics.preprocessor.1 {\"name\":\"preprocessor\",\"version\":\"1\",\"lastInference\":\"1739867342480\"," //
-            + "\"inferenceCount\":\"42\",\"executionCount\":\"42\",\"inferenceStats\":{\"success\":{\"count\":\"42\",\"ns\":\"278516928\"},\"fail\":{\"count\":\"0\",\"ns\":\"0\"}," //
-            + "\"queue\":{\"count\":\"42\",\"ns\":\"8943104\"},\"computeInput\":{\"count\":\"42\",\"ns\":\"11304704\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"230288448\"}," //
-            + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"26880672\"},\"cacheHit\":{\"count\":\"0\",\"ns\":\"0\"},\"cacheMiss\":{\"count\":\"0\",\"ns\":\"0\"}}," //
-            + "\"batchStats\":[{\"batchSize\":\"1\",\"computeInput\":{\"count\":\"42\",\"ns\":\"11304704\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"230288448\"}," //
-            + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"26880672\"}}],\"memoryUsage\":[],\"responseStats\":{}}";
+    protected static final String TRITON_EXPECTED_METRICS =
+            "gpu.metrics.GPU-340cec52-80ba-c0df-8511-5f9680aae0ff {\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
+                    + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}" //
+                    + " gpu.metrics.GPU-340cec52-80ba-c0df-8511-5f9680aae0ed {\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ed\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
+                    + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}";
+    protected static final String TRITON_EXPECTED_STATS =
+            "model.metrics.identity_long.1 {\"name\":\"identity_long\",\"version\":\"1\",\"lastInference\":\"1739867342484\"," //
+                    + "\"inferenceCount\":\"42\",\"executionCount\":\"42\",\"inferenceStats\":{\"success\":{\"count\":\"42\",\"ns\":\"30097440\"},\"fail\":{\"count\":\"0\",\"ns\":\"0\"}," //
+                    + "\"queue\":{\"count\":\"42\",\"ns\":\"7137056\"},\"computeInput\":{\"count\":\"42\",\"ns\":\"532768\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"4664640\"}," //
+                    + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"4736\"},\"cacheHit\":{\"count\":\"0\",\"ns\":\"0\"},\"cacheMiss\":{\"count\":\"0\",\"ns\":\"0\"}}," //
+                    + "\"batchStats\":[{\"batchSize\":\"1\",\"computeInput\":{\"count\":\"42\",\"ns\":\"532768\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"4664640\"}," //
+                    + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"4736\"}}],\"memoryUsage\":[],\"responseStats\":{}} model.metrics.preprocessor.1 {\"name\":\"preprocessor\",\"version\":\"1\",\"lastInference\":\"1739867342480\"," //
+                    + "\"inferenceCount\":\"42\",\"executionCount\":\"42\",\"inferenceStats\":{\"success\":{\"count\":\"42\",\"ns\":\"278516928\"},\"fail\":{\"count\":\"0\",\"ns\":\"0\"}," //
+                    + "\"queue\":{\"count\":\"42\",\"ns\":\"8943104\"},\"computeInput\":{\"count\":\"42\",\"ns\":\"11304704\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"230288448\"}," //
+                    + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"26880672\"},\"cacheHit\":{\"count\":\"0\",\"ns\":\"0\"},\"cacheMiss\":{\"count\":\"0\",\"ns\":\"0\"}}," //
+                    + "\"batchStats\":[{\"batchSize\":\"1\",\"computeInput\":{\"count\":\"42\",\"ns\":\"11304704\"},\"computeInfer\":{\"count\":\"42\",\"ns\":\"230288448\"}," //
+                    + "\"computeOutput\":{\"count\":\"42\",\"ns\":\"26880672\"}}],\"memoryUsage\":[],\"responseStats\":{}}";
 }

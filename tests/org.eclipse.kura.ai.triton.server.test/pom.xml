@@ -13,9 +13,7 @@
      Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -59,18 +57,16 @@
                 <version>3.0.0</version>
                 <executions>
                     <execution>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
                         <phase>generate-sources</phase>
                         <configuration>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
                             <stripVersion>true</stripVersion>
-                            <includeArtifactIds>
-                                grpc-testing,
-                                grpc-inprocess
-                            </includeArtifactIds>
+                            <includeArtifactIds>grpc-testing,
+                                grpc-inprocess</includeArtifactIds>
                         </configuration>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -91,10 +87,10 @@
                 <executions>
                     <execution>
                         <id>compiletests</id>
-                        <phase>test-compile</phase>
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
+                        <phase>test-compile</phase>
                     </execution>
                 </executions>
             </plugin>

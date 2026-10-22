@@ -12,15 +12,15 @@
  ******************************************************************************/
 package org.eclipse.kura.ai.triton.server.metrics.parser;
 
+import com.google.gson.annotations.SerializedName;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.gson.annotations.SerializedName;
 
 public class GpuMetrics {
 
     @SerializedName(value = "gpuUuid")
     private final String uuid;
+
     @SerializedName(value = "gpuStats")
     private final Map<String, String> metrics;
 

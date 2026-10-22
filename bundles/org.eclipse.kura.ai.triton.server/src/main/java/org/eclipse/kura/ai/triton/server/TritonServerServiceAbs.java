@@ -16,6 +16,34 @@ package org.eclipse.kura.ai.triton.server;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.ProtocolStringList;
+import com.google.protobuf.util.JsonFormat;
+import inference.GRPCInferenceServiceGrpc;
+import inference.GRPCInferenceServiceGrpc.GRPCInferenceServiceBlockingStub;
+import inference.GrpcService.InferParameter;
+import inference.GrpcService.InferTensorContents;
+import inference.GrpcService.ModelInferRequest;
+import inference.GrpcService.ModelInferResponse;
+import inference.GrpcService.ModelInferResponse.InferOutputTensor;
+import inference.GrpcService.ModelMetadataRequest;
+import inference.GrpcService.ModelMetadataResponse;
+import inference.GrpcService.ModelReadyRequest;
+import inference.GrpcService.ModelReadyResponse;
+import inference.GrpcService.ModelStatistics;
+import inference.GrpcService.ModelStatisticsRequest;
+import inference.GrpcService.ModelStatisticsResponse;
+import inference.GrpcService.RepositoryIndexRequest;
+import inference.GrpcService.RepositoryIndexResponse;
+import inference.GrpcService.RepositoryIndexResponse.ModelIndex;
+import inference.GrpcService.RepositoryModelLoadRequest;
+import inference.GrpcService.RepositoryModelUnloadRequest;
+import inference.GrpcService.ServerLiveRequest;
+import inference.GrpcService.ServerLiveResponse;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -42,7 +70,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.eclipse.kura.KuraConnectException;
 import org.eclipse.kura.KuraException;
 import org.eclipse.kura.KuraIOException;
@@ -59,36 +86,6 @@ import org.eclipse.kura.crypto.CryptoService;
 import org.eclipse.kura.executor.CommandExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.ProtocolStringList;
-import com.google.protobuf.util.JsonFormat;
-
-import inference.GRPCInferenceServiceGrpc;
-import inference.GRPCInferenceServiceGrpc.GRPCInferenceServiceBlockingStub;
-import inference.GrpcService.InferParameter;
-import inference.GrpcService.InferTensorContents;
-import inference.GrpcService.ModelInferRequest;
-import inference.GrpcService.ModelInferResponse;
-import inference.GrpcService.ModelInferResponse.InferOutputTensor;
-import inference.GrpcService.ModelMetadataRequest;
-import inference.GrpcService.ModelMetadataResponse;
-import inference.GrpcService.ModelReadyRequest;
-import inference.GrpcService.ModelReadyResponse;
-import inference.GrpcService.ModelStatistics;
-import inference.GrpcService.ModelStatisticsRequest;
-import inference.GrpcService.ModelStatisticsResponse;
-import inference.GrpcService.RepositoryIndexRequest;
-import inference.GrpcService.RepositoryIndexResponse;
-import inference.GrpcService.RepositoryIndexResponse.ModelIndex;
-import inference.GrpcService.RepositoryModelLoadRequest;
-import inference.GrpcService.RepositoryModelUnloadRequest;
-import inference.GrpcService.ServerLiveRequest;
-import inference.GrpcService.ServerLiveResponse;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
-import io.grpc.StatusRuntimeException;
 
 public abstract class TritonServerServiceAbs implements InferenceEngineMetricsService, ConfigurableComponent {
 
@@ -118,8 +115,10 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         this.cryptoService = cryptoService;
     }
 
-    abstract TritonServerInstanceManager createInstanceManager(TritonServerServiceOptions options,
-            CommandExecutorService executorService, ContainerOrchestrationService orchestrationService,
+    abstract TritonServerInstanceManager createInstanceManager(
+            TritonServerServiceOptions options,
+            CommandExecutorService executorService,
+            ContainerOrchestrationService orchestrationService,
             String decryptionFolderPath);
 
     abstract boolean isConfigurationValid();
@@ -181,9 +180,13 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
             logger.info("Using decryption model directory at path {}", this.decryptionFolderPath);
         }
 
-        this.tritonServerInstanceManager = createInstanceManager(this.options, this.commandExecutorService,
-                this.containerOrchestrationService, this.decryptionFolderPath);
-        logger.info("Created {} type", this.tritonServerInstanceManager.getClass().getSimpleName());
+        this.tritonServerInstanceManager = createInstanceManager(
+                this.options,
+                this.commandExecutorService,
+                this.containerOrchestrationService,
+                this.decryptionFolderPath);
+        logger.info(
+                "Created {} type", this.tritonServerInstanceManager.getClass().getSimpleName());
 
         this.tritonServerInstanceManager.start();
     }
@@ -219,8 +222,10 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
 
     private void setGrpcResources() {
         this.grpcChannel = ManagedChannelBuilder.forAddress(getServerAddress(), this.options.getGrpcPort())
-                .usePlaintext().maxInboundMessageSize(this.options.getGrpcMaxMessageSize())
-                .maxInboundMetadataSize(Integer.MAX_VALUE).build();
+                .usePlaintext()
+                .maxInboundMessageSize(this.options.getGrpcMaxMessageSize())
+                .maxInboundMetadataSize(Integer.MAX_VALUE)
+                .build();
         setGrpcStub(GRPCInferenceServiceGrpc.newBlockingStub(this.grpcChannel));
     }
 
@@ -260,12 +265,16 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         if (isModelEncryptionEnabled()) {
             String password = this.options.getModelRepositoryPassword();
             String plainPassword = String.valueOf(this.cryptoService.decryptAes(password.toCharArray()));
-            String encryptedModelPath = TritonServerEncryptionUtils.getEncryptedModelPath(modelName,
-                    this.options.getModelRepositoryPath());
-            String decryptedModelPath = Paths.get(this.decryptionFolderPath, modelName + ".zip").toString();
+            String encryptedModelPath =
+                    TritonServerEncryptionUtils.getEncryptedModelPath(modelName, this.options.getModelRepositoryPath());
+            String decryptedModelPath =
+                    Paths.get(this.decryptionFolderPath, modelName + ".zip").toString();
 
-            logger.info("Model decryption password detected. Decrypting model {} at {} into {}", modelName,
-                    encryptedModelPath, decryptedModelPath);
+            logger.info(
+                    "Model decryption password detected. Decrypting model {} at {} into {}",
+                    modelName,
+                    encryptedModelPath,
+                    decryptedModelPath);
             try {
                 TritonServerEncryptionUtils.decryptModel(plainPassword, encryptedModelPath, decryptedModelPath);
                 TritonServerEncryptionUtils.unzipModel(decryptedModelPath, this.decryptionFolderPath);
@@ -307,7 +316,6 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         } catch (StatusRuntimeException e) {
             throw new KuraIOException(e, "Cannot unload the model " + modelName);
         }
-
     }
 
     @Override
@@ -358,17 +366,22 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
                 infoBuilder.version(versions.get(versions.size() - 1));
             }
 
-            modelMetadataResponse.getInputsList().forEach(tensor -> infoBuilder.addInputDescriptor(
-                    TensorDescriptor.builder(tensor.getName(), tensor.getDatatype(), tensor.getShapeList()).build()));
-            modelMetadataResponse.getOutputsList().forEach(tensor -> infoBuilder.addOutputDescriptor(
-                    TensorDescriptor.builder(tensor.getName(), tensor.getDatatype(), tensor.getShapeList()).build()));
+            modelMetadataResponse
+                    .getInputsList()
+                    .forEach(tensor -> infoBuilder.addInputDescriptor(
+                            TensorDescriptor.builder(tensor.getName(), tensor.getDatatype(), tensor.getShapeList())
+                                    .build()));
+            modelMetadataResponse
+                    .getOutputsList()
+                    .forEach(tensor -> infoBuilder.addOutputDescriptor(
+                            TensorDescriptor.builder(tensor.getName(), tensor.getDatatype(), tensor.getShapeList())
+                                    .build()));
 
             modelInfo = Optional.of(infoBuilder.build());
         } catch (StatusRuntimeException | IllegalArgumentException e) {
             throw new KuraIOException(e, "Cannot get info for " + modelName + " from server");
         }
         return modelInfo;
-
     }
 
     @Override
@@ -397,8 +410,10 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
                 inferRequest.putAllParameters(getInferParameters(modelInfo.getParameters()));
             }
             inputData.forEach(input -> inferRequest.addInputs(createInputDataBuilder(input)));
-            modelInfo.getOutputs().forEach(
-                    outputDescriptor -> inferRequest.addOutputs(createRequestedOutputBuilder(outputDescriptor)));
+            modelInfo
+                    .getOutputs()
+                    .forEach(outputDescriptor ->
+                            inferRequest.addOutputs(createRequestedOutputBuilder(outputDescriptor)));
 
             ModelInferResponse inferResponse = this.grpcStub.modelInfer(inferRequest.build());
 
@@ -408,7 +423,6 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         }
 
         return inferenceResults;
-
     }
 
     @Override
@@ -429,15 +443,17 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         Map<String, String> jsonModelStatistics = new HashMap<>();
         ModelStatisticsRequest.Builder modelStatisticsRequest = ModelStatisticsRequest.newBuilder();
         try {
-            ModelStatisticsResponse modelStatisticsResponse = this.grpcStub
-                    .modelStatistics(modelStatisticsRequest.build());
+            ModelStatisticsResponse modelStatisticsResponse =
+                    this.grpcStub.modelStatistics(modelStatisticsRequest.build());
 
             List<ModelStatistics> grpcStatistics = modelStatisticsResponse.getModelStatsList();
             grpcStatistics.forEach(grpcStatistic -> {
                 try {
                     String key = getKey(grpcStatistic);
-                    String jsonValue = JsonFormat.printer().includingDefaultValueFields()
-                            .omittingInsignificantWhitespace().print(grpcStatistic);
+                    String jsonValue = JsonFormat.printer()
+                            .includingDefaultValueFields()
+                            .omittingInsignificantWhitespace()
+                            .print(grpcStatistic);
                     if (logger.isDebugEnabled()) {
                         logger.debug("{} {}", key, jsonValue);
                     }
@@ -459,8 +475,8 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
     }
 
     private Map<String, String> getGpuMetrics() throws KuraException {
-        List<String> response = getListMetrics(
-                "http://" + getServerAddress() + ":" + this.options.getMetricsPort() + "/metrics");
+        List<String> response =
+                getListMetrics("http://" + getServerAddress() + ":" + this.options.getMetricsPort() + "/metrics");
 
         GpuMetricsParser metricsParser = new GpuMetricsParser(response);
         return metricsParser.parse();
@@ -528,17 +544,17 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         Map<String, Object> parameters = new HashMap<>();
         inferParameters.forEach((key, value) -> {
             switch (value.getParameterChoiceCase()) {
-            case BOOL_PARAM:
-                parameters.put(key, value.getBoolParam());
-                break;
-            case INT64_PARAM:
-                parameters.put(key, value.getInt64Param());
-                break;
-            case STRING_PARAM:
-                parameters.put(key, value.getStringParam());
-                break;
-            default:
-                throw new IllegalArgumentException("Parameter value type unrecognized.");
+                case BOOL_PARAM:
+                    parameters.put(key, value.getBoolParam());
+                    break;
+                case INT64_PARAM:
+                    parameters.put(key, value.getInt64Param());
+                    break;
+                case STRING_PARAM:
+                    parameters.put(key, value.getStringParam());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Parameter value type unrecognized.");
             }
         });
         return parameters;
@@ -546,8 +562,8 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
 
     private ModelInferRequest.InferRequestedOutputTensor.Builder createRequestedOutputBuilder(
             TensorDescriptor outputDescriptor) {
-        ModelInferRequest.InferRequestedOutputTensor.Builder output = ModelInferRequest.InferRequestedOutputTensor
-                .newBuilder();
+        ModelInferRequest.InferRequestedOutputTensor.Builder output =
+                ModelInferRequest.InferRequestedOutputTensor.newBuilder();
         output.setName(outputDescriptor.getName());
         if (!outputDescriptor.getParameters().isEmpty()) {
             output.putAllParameters(getInferParameters(outputDescriptor.getParameters()));
@@ -559,44 +575,44 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         InferTensorContents.Builder inputDataBuilder = InferTensorContents.newBuilder();
         DataType modelInputType = DataType.valueOf(input.getDescriptor().getType());
         switch (modelInputType) {
-        case BOOL:
-            addDataTypeInputData(input, Boolean.class, inputDataBuilder::addAllBoolContents);
-            break;
-        case UINT8:
-            addUint8InputData(input, inputDataBuilder);
-            break;
-        case INT8:
-            addInt8InputData(input, inputDataBuilder);
-            break;
-        case UINT16:
-            addUint16InputData(input, inputDataBuilder);
-            break;
-        case INT16:
-            addInt16InputData(input, inputDataBuilder);
-            break;
-        case UINT32:
-            addDataTypeInputData(input, Integer.class, inputDataBuilder::addAllUintContents);
-            break;
-        case INT32:
-            addDataTypeInputData(input, Integer.class, inputDataBuilder::addAllIntContents);
-            break;
-        case UINT64:
-            addDataTypeInputData(input, Long.class, inputDataBuilder::addAllUint64Contents);
-            break;
-        case INT64:
-            addDataTypeInputData(input, Long.class, inputDataBuilder::addAllInt64Contents);
-            break;
-        case FP32:
-            addDataTypeInputData(input, Float.class, inputDataBuilder::addAllFp32Contents);
-            break;
-        case FP64:
-            addDataTypeInputData(input, Double.class, inputDataBuilder::addAllFp64Contents);
-            break;
-        case BYTES:
-            addBytesInputData(input, inputDataBuilder);
-            break;
-        default:
-            throw new IllegalArgumentException("Date type " + modelInputType + " not supported");
+            case BOOL:
+                addDataTypeInputData(input, Boolean.class, inputDataBuilder::addAllBoolContents);
+                break;
+            case UINT8:
+                addUint8InputData(input, inputDataBuilder);
+                break;
+            case INT8:
+                addInt8InputData(input, inputDataBuilder);
+                break;
+            case UINT16:
+                addUint16InputData(input, inputDataBuilder);
+                break;
+            case INT16:
+                addInt16InputData(input, inputDataBuilder);
+                break;
+            case UINT32:
+                addDataTypeInputData(input, Integer.class, inputDataBuilder::addAllUintContents);
+                break;
+            case INT32:
+                addDataTypeInputData(input, Integer.class, inputDataBuilder::addAllIntContents);
+                break;
+            case UINT64:
+                addDataTypeInputData(input, Long.class, inputDataBuilder::addAllUint64Contents);
+                break;
+            case INT64:
+                addDataTypeInputData(input, Long.class, inputDataBuilder::addAllInt64Contents);
+                break;
+            case FP32:
+                addDataTypeInputData(input, Float.class, inputDataBuilder::addAllFp32Contents);
+                break;
+            case FP64:
+                addDataTypeInputData(input, Double.class, inputDataBuilder::addAllFp64Contents);
+                break;
+            case BYTES:
+                addBytesInputData(input, inputDataBuilder);
+                break;
+            default:
+                throw new IllegalArgumentException("Date type " + modelInputType + " not supported");
         }
 
         ModelInferRequest.InferInputTensor.Builder inputBuilder = ModelInferRequest.InferInputTensor.newBuilder();
@@ -605,14 +621,16 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         input.getDescriptor().getShape().forEach(inputBuilder::addShape);
         inputBuilder.setContents(inputDataBuilder);
         if (!input.getDescriptor().getParameters().isEmpty()) {
-            inputBuilder.putAllParameters(getInferParameters(input.getDescriptor().getParameters()));
+            inputBuilder.putAllParameters(
+                    getInferParameters(input.getDescriptor().getParameters()));
         }
         return inputBuilder;
     }
 
     private <T> void addDataTypeInputData(Tensor input, Class<T> clazz, Consumer<List<T>> dataConsumer) {
-        dataConsumer.accept(input.getData(clazz).orElseThrow(() -> new IllegalArgumentException(
-                "Expected a list of " + clazz.getSimpleName() + " but got a list of " + input.getType())));
+        dataConsumer.accept(input.getData(clazz)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Expected a list of " + clazz.getSimpleName() + " but got a list of " + input.getType())));
     }
 
     private void addBytesInputData(Tensor input, InferTensorContents.Builder inputDataBuilder) {
@@ -702,63 +720,74 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
         List<Tensor> results = new ArrayList<>();
         for (int index = 0; index < inferResponse.getOutputsCount(); index++) {
             InferOutputTensor inferOutputTensor = inferResponse.getOutputs(index);
-            ByteString byteStringResponse = inferResponse.getRawOutputContentsList().get(index);
+            ByteString byteStringResponse =
+                    inferResponse.getRawOutputContentsList().get(index);
             if (nonNull(inferOutputTensor)) {
                 DataType outputType = DataType.valueOf(inferOutputTensor.getDatatype());
-                TensorDescriptorBuilder outputDescriptorBuilder = TensorDescriptor.builder(inferOutputTensor.getName(),
-                        outputType.toString(), inferOutputTensor.getShapeList());
+                TensorDescriptorBuilder outputDescriptorBuilder = TensorDescriptor.builder(
+                        inferOutputTensor.getName(), outputType.toString(), inferOutputTensor.getShapeList());
                 if (!inferOutputTensor.getParametersMap().isEmpty()) {
                     getParameters(inferOutputTensor.getParametersMap()).forEach(outputDescriptorBuilder::addParameter);
                 }
                 TensorDescriptor outputDescriptor = outputDescriptorBuilder.build();
 
                 switch (outputType) {
-                case BOOL:
-                    List<Boolean> booleanList = bufferToBooleanList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
-                    results.add(new Tensor(Boolean.class, outputDescriptor, booleanList));
-                    break;
-                case UINT8:
-                case INT8:
-                    List<Byte> byteList = bufferToByteList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
-                    results.add(new Tensor(Byte.class, outputDescriptor, byteList));
-                    break;
-                case UINT16:
-                case INT16:
-                    List<Short> shortList = bufferToShortList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN).asShortBuffer());
-                    results.add(new Tensor(Short.class, outputDescriptor, shortList));
-                    break;
-                case UINT32:
-                case INT32:
-                    List<Integer> integerList = bufferToIntList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN).asIntBuffer());
-                    results.add(new Tensor(Integer.class, outputDescriptor, integerList));
-                    break;
-                case UINT64:
-                case INT64:
-                    List<Long> longList = bufferToLongList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN).asLongBuffer());
-                    results.add(new Tensor(Long.class, outputDescriptor, longList));
-                    break;
-                case FP32:
-                    List<Float> floatList = bufferToFloatList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN).asFloatBuffer());
-                    results.add(new Tensor(Float.class, outputDescriptor, floatList));
-                    break;
-                case FP64:
-                    List<Double> doubleList = bufferToDoubleList(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN).asDoubleBuffer());
-                    results.add(new Tensor(Double.class, outputDescriptor, doubleList));
-                    break;
-                case BYTES:
-                    List<Byte> bytesList = bufferToBytes(
-                            byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
-                    results.add(new Tensor(Byte.class, outputDescriptor, bytesList));
-                    break;
-                default:
-                    throw new IllegalArgumentException("Date type " + outputType + " not supported");
+                    case BOOL:
+                        List<Boolean> booleanList = bufferToBooleanList(
+                                byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
+                        results.add(new Tensor(Boolean.class, outputDescriptor, booleanList));
+                        break;
+                    case UINT8:
+                    case INT8:
+                        List<Byte> byteList = bufferToByteList(
+                                byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
+                        results.add(new Tensor(Byte.class, outputDescriptor, byteList));
+                        break;
+                    case UINT16:
+                    case INT16:
+                        List<Short> shortList = bufferToShortList(byteStringResponse
+                                .asReadOnlyByteBuffer()
+                                .order(ByteOrder.LITTLE_ENDIAN)
+                                .asShortBuffer());
+                        results.add(new Tensor(Short.class, outputDescriptor, shortList));
+                        break;
+                    case UINT32:
+                    case INT32:
+                        List<Integer> integerList = bufferToIntList(byteStringResponse
+                                .asReadOnlyByteBuffer()
+                                .order(ByteOrder.LITTLE_ENDIAN)
+                                .asIntBuffer());
+                        results.add(new Tensor(Integer.class, outputDescriptor, integerList));
+                        break;
+                    case UINT64:
+                    case INT64:
+                        List<Long> longList = bufferToLongList(byteStringResponse
+                                .asReadOnlyByteBuffer()
+                                .order(ByteOrder.LITTLE_ENDIAN)
+                                .asLongBuffer());
+                        results.add(new Tensor(Long.class, outputDescriptor, longList));
+                        break;
+                    case FP32:
+                        List<Float> floatList = bufferToFloatList(byteStringResponse
+                                .asReadOnlyByteBuffer()
+                                .order(ByteOrder.LITTLE_ENDIAN)
+                                .asFloatBuffer());
+                        results.add(new Tensor(Float.class, outputDescriptor, floatList));
+                        break;
+                    case FP64:
+                        List<Double> doubleList = bufferToDoubleList(byteStringResponse
+                                .asReadOnlyByteBuffer()
+                                .order(ByteOrder.LITTLE_ENDIAN)
+                                .asDoubleBuffer());
+                        results.add(new Tensor(Double.class, outputDescriptor, doubleList));
+                        break;
+                    case BYTES:
+                        List<Byte> bytesList = bufferToBytes(
+                                byteStringResponse.asReadOnlyByteBuffer().order(ByteOrder.LITTLE_ENDIAN));
+                        results.add(new Tensor(Byte.class, outputDescriptor, bytesList));
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Date type " + outputType + " not supported");
                 }
             }
         }
@@ -926,5 +955,4 @@ public abstract class TritonServerServiceAbs implements InferenceEngineMetricsSe
             logger.debug(e.getMessage(), e);
         }
     }
-
 }

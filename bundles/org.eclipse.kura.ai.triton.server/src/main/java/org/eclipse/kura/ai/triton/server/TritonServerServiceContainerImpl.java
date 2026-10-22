@@ -18,15 +18,18 @@ import org.eclipse.kura.executor.CommandExecutorService;
 public class TritonServerServiceContainerImpl extends TritonServerServiceAbs {
 
     @Override
-    TritonServerInstanceManager createInstanceManager(TritonServerServiceOptions options,
-            CommandExecutorService executorService, ContainerOrchestrationService orchestrationService,
+    TritonServerInstanceManager createInstanceManager(
+            TritonServerServiceOptions options,
+            CommandExecutorService executorService,
+            ContainerOrchestrationService orchestrationService,
             String decryptionFolderPath) {
         return new TritonServerContainerManager(options, orchestrationService, decryptionFolderPath);
     }
 
     @Override
     boolean isConfigurationValid() {
-        return !isNullOrEmpty(this.options.getModelRepositoryPath()) && !isNullOrEmpty(this.options.getContainerImage())
+        return !isNullOrEmpty(this.options.getModelRepositoryPath())
+                && !isNullOrEmpty(this.options.getContainerImage())
                 && !isNullOrEmpty(this.options.getContainerImageTag());
     }
 

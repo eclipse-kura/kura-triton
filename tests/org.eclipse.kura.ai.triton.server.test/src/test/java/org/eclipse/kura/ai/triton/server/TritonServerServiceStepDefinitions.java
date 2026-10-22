@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import static org.junit.Assert.assertFalse;
@@ -22,31 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import org.eclipse.kura.KuraException;
-import org.eclipse.kura.KuraRuntimeException;
-import org.eclipse.kura.ai.inference.ModelInfo;
-import org.eclipse.kura.ai.inference.Tensor;
-import org.eclipse.kura.ai.inference.TensorDescriptor;
-import org.eclipse.kura.container.orchestration.ContainerOrchestrationService;
-import org.eclipse.kura.container.orchestration.ImageInstanceDescriptor;
-import org.eclipse.kura.crypto.CryptoService;
-import org.eclipse.kura.executor.Command;
-import org.eclipse.kura.executor.CommandExecutorService;
-import org.junit.Before;
-import org.junit.Rule;
-
 import com.google.protobuf.ByteString;
-
 import inference.GRPCInferenceServiceGrpc;
 import inference.GrpcService.InferBatchStatistics;
 import inference.GrpcService.InferStatistics;
@@ -75,6 +50,27 @@ import io.grpc.inprocess.InProcessChannelBuilder;
 import io.grpc.inprocess.InProcessServerBuilder;
 import io.grpc.stub.StreamObserver;
 import io.grpc.testing.GrpcCleanupRule;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Consumer;
+import org.eclipse.kura.KuraException;
+import org.eclipse.kura.KuraRuntimeException;
+import org.eclipse.kura.ai.inference.ModelInfo;
+import org.eclipse.kura.ai.inference.Tensor;
+import org.eclipse.kura.ai.inference.TensorDescriptor;
+import org.eclipse.kura.container.orchestration.ContainerOrchestrationService;
+import org.eclipse.kura.container.orchestration.ImageInstanceDescriptor;
+import org.eclipse.kura.crypto.CryptoService;
+import org.eclipse.kura.executor.Command;
+import org.eclipse.kura.executor.CommandExecutorService;
+import org.junit.Before;
+import org.junit.Rule;
 
 public abstract class TritonServerServiceStepDefinitions extends TritonServerServiceConstants {
 
@@ -88,10 +84,22 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
 
     private List<String> tritonModelRepoStub;
 
-    private Command startTritonServerCmd = new Command(new String[] { "tritonserver",
-            "--model-repository=/fake-repository-path", "--backend-directory=/fake-backends-path", "--http-port=4001",
-            "--grpc-port=4002", "--metrics-port=4003", "--model-control-mode=explicit", "--allow-metrics=true",
-            "--allow-gpu-metrics=true", "2>&1", "|", "systemd-cat", "-t tritonserver", "-p info" });
+    private Command startTritonServerCmd = new Command(new String[] {
+        "tritonserver",
+        "--model-repository=/fake-repository-path",
+        "--backend-directory=/fake-backends-path",
+        "--http-port=4001",
+        "--grpc-port=4002",
+        "--metrics-port=4003",
+        "--model-control-mode=explicit",
+        "--allow-metrics=true",
+        "--allow-gpu-metrics=true",
+        "2>&1",
+        "|",
+        "systemd-cat",
+        "-t tritonserver",
+        "-p info"
+    });
 
     public TritonServerServiceStepDefinitions() {
         this.startTritonServerCmd.setExecuteInAShell(true);
@@ -111,25 +119,25 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
 
     protected void givenTritonServerServiceRemoteImpl(Map<String, Object> properties, boolean metricsEnabled)
             throws IOException {
-        this.tritonServerService = createTritonServerServiceRemoteImpl(properties, tritonModelRepoStub, true,
-                metricsEnabled);
+        this.tritonServerService =
+                createTritonServerServiceRemoteImpl(properties, tritonModelRepoStub, true, metricsEnabled);
     }
 
     protected void givenTritonServerServiceNativeImpl(Map<String, Object> properties, boolean metricsEnabled)
             throws IOException {
-        this.tritonServerService = createTritonServerServiceNativeImpl(properties, tritonModelRepoStub, true,
-                metricsEnabled);
+        this.tritonServerService =
+                createTritonServerServiceNativeImpl(properties, tritonModelRepoStub, true, metricsEnabled);
     }
 
     protected void givenTritonServerServiceContainerImpl(Map<String, Object> properties, boolean metricsEnabled)
             throws IOException {
-        this.tritonServerService = createTritonServerServiceContainerImpl(properties, tritonModelRepoStub, true,
-                metricsEnabled);
+        this.tritonServerService =
+                createTritonServerServiceContainerImpl(properties, tritonModelRepoStub, true, metricsEnabled);
     }
 
     protected void givenTritonServerServiceNativeImplNotActive() throws IOException {
-        this.tritonServerService = createTritonServerServiceNativeImpl(new HashMap<>(), tritonModelRepoStub, false,
-                false);
+        this.tritonServerService =
+                createTritonServerServiceNativeImpl(new HashMap<>(), tritonModelRepoStub, false, false);
     }
 
     protected void whenLoadModel(String modelName) {
@@ -258,7 +266,7 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
         Map<String, Object> properties = new HashMap<>();
 
         properties.put("server.address", "localhost");
-        properties.put("server.ports", new Integer[] { 4000, 4001, 4002 });
+        properties.put("server.ports", new Integer[] {4000, 4001, 4002});
 
         return properties;
     }
@@ -268,7 +276,7 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
         Map<String, Object> properties = new HashMap<>();
 
         properties.put("server.address", "localhost");
-        properties.put("server.ports", new Integer[] { 4001, 4002, 4003 });
+        properties.put("server.ports", new Integer[] {4001, 4002, 4003});
 
         return properties;
     }
@@ -276,7 +284,7 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
     protected Map<String, Object> invalidProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4000, 4001 });
+        properties.put("server.ports", new Integer[] {4000, 4001});
 
         return properties;
     }
@@ -284,7 +292,7 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
     protected Map<String, Object> enableLocalServerProperties() {
         Map<String, Object> properties = new HashMap<>();
 
-        properties.put("server.ports", new Integer[] { 4001, 4002, 4003 });
+        properties.put("server.ports", new Integer[] {4001, 4002, 4003});
         properties.put("local.backends.path", "/fake-backends-path");
         properties.put("local.model.repository.path", "/fake-repository-path");
 
@@ -321,8 +329,12 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
                 new TensorDescriptor("IN_DOUBLE", "", Optional.empty(), outputShape, new HashMap<String, Object>()));
         outDescs.add(new TensorDescriptor("IN_LONG", "", Optional.empty(), outputShape, new HashMap<String, Object>()));
 
-        return ModelInfo.builder("name").platform("platform").version("version").addAllInputDescriptor(inDescs)
-                .addAllOutputDescriptor(outDescs).build();
+        return ModelInfo.builder("name")
+                .platform("platform")
+                .version("version")
+                .addAllInputDescriptor(inDescs)
+                .addAllOutputDescriptor(outDescs)
+                .build();
     }
 
     protected List<Tensor> exampleInputData() {
@@ -342,13 +354,14 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
         return tensors;
     }
 
-    private TritonServerServiceAbs createTritonServerServiceNativeImpl(Map<String, Object> properties,
-            List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled) throws IOException {
+    private TritonServerServiceAbs createTritonServerServiceNativeImpl(
+            Map<String, Object> properties, List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled)
+            throws IOException {
 
         TritonServerServiceAbs tritonServerServiceImpl = new TritonServerServiceNativeImpl();
 
         this.ces = mock(CommandExecutorService.class);
-        when(ces.isRunning(new String[] { "tritonserver" })).thenReturn(false);
+        when(ces.isRunning(new String[] {"tritonserver"})).thenReturn(false);
 
         tritonServerServiceImpl.setCommandExecutorService(ces);
 
@@ -359,21 +372,25 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
             tritonServerServiceImpl.activate(properties);
         }
 
-        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl = createGRPCMock(tritonModelRepoStub,
-                metricsEnabled);
+        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl =
+                createGRPCMock(tritonModelRepoStub, metricsEnabled);
 
         String serverName = InProcessServerBuilder.generateName();
-        grpcCleanup.register(
-                InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());
-        ManagedChannel channel = grpcCleanup
-                .register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
+        grpcCleanup.register(InProcessServerBuilder.forName(serverName)
+                .directExecutor()
+                .addService(serviceImpl)
+                .build()
+                .start());
+        ManagedChannel channel = grpcCleanup.register(
+                InProcessChannelBuilder.forName(serverName).directExecutor().build());
         tritonServerServiceImpl.setGrpcStub(GRPCInferenceServiceGrpc.newBlockingStub(channel));
 
         return tritonServerServiceImpl;
     }
 
-    private TritonServerServiceAbs createTritonServerServiceContainerImpl(Map<String, Object> properties,
-            List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled) throws IOException {
+    private TritonServerServiceAbs createTritonServerServiceContainerImpl(
+            Map<String, Object> properties, List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled)
+            throws IOException {
 
         TritonServerServiceAbs tritonServerServiceImpl = new TritonServerServiceContainerImpl();
 
@@ -389,14 +406,17 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
             tritonServerServiceImpl.activate(properties);
         }
 
-        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl = createGRPCMock(tritonModelRepoStub,
-                metricsEnabled);
+        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl =
+                createGRPCMock(tritonModelRepoStub, metricsEnabled);
 
         String serverName = InProcessServerBuilder.generateName();
-        grpcCleanup.register(
-                InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());
-        ManagedChannel channel = grpcCleanup
-                .register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
+        grpcCleanup.register(InProcessServerBuilder.forName(serverName)
+                .directExecutor()
+                .addService(serviceImpl)
+                .build()
+                .start());
+        ManagedChannel channel = grpcCleanup.register(
+                InProcessChannelBuilder.forName(serverName).directExecutor().build());
         tritonServerServiceImpl.setGrpcStub(GRPCInferenceServiceGrpc.newBlockingStub(channel));
 
         return tritonServerServiceImpl;
@@ -413,8 +433,9 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
         when(this.orc.listImageInstanceDescriptors()).thenReturn(Arrays.asList());
     }
 
-    private TritonServerServiceAbs createTritonServerServiceRemoteImpl(Map<String, Object> properties,
-            List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled) throws IOException {
+    private TritonServerServiceAbs createTritonServerServiceRemoteImpl(
+            Map<String, Object> properties, List<String> tritonModelRepoStub, boolean activate, boolean metricsEnabled)
+            throws IOException {
 
         TritonServerServiceAbs tritonServerServiceImpl = new TritonServerServiceRemoteImpl();
 
@@ -428,74 +449,90 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
             tritonServerServiceImpl.activate(properties);
         }
 
-        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl = createGRPCMock(tritonModelRepoStub,
-                metricsEnabled);
+        GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase serviceImpl =
+                createGRPCMock(tritonModelRepoStub, metricsEnabled);
 
         String serverName = InProcessServerBuilder.generateName();
-        grpcCleanup.register(
-                InProcessServerBuilder.forName(serverName).directExecutor().addService(serviceImpl).build().start());
-        ManagedChannel channel = grpcCleanup
-                .register(InProcessChannelBuilder.forName(serverName).directExecutor().build());
+        grpcCleanup.register(InProcessServerBuilder.forName(serverName)
+                .directExecutor()
+                .addService(serviceImpl)
+                .build()
+                .start());
+        ManagedChannel channel = grpcCleanup.register(
+                InProcessChannelBuilder.forName(serverName).directExecutor().build());
         tritonServerServiceImpl.setGrpcStub(GRPCInferenceServiceGrpc.newBlockingStub(channel));
 
         return tritonServerServiceImpl;
     }
 
-    private GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase createGRPCMock(List<String> tritonModelRepoStub,
-            boolean metricsEnabled) {
-        return mock(GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase.class,
+    private GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase createGRPCMock(
+            List<String> tritonModelRepoStub, boolean metricsEnabled) {
+        return mock(
+                GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase.class,
                 delegatesTo(new GRPCInferenceServiceGrpc.GRPCInferenceServiceImplBase() {
 
                     @Override
-                    public void repositoryModelLoad(inference.GrpcService.RepositoryModelLoadRequest request,
-                            io.grpc.stub.StreamObserver<inference.GrpcService.RepositoryModelLoadResponse> responseObserver) {
+                    public void repositoryModelLoad(
+                            inference.GrpcService.RepositoryModelLoadRequest request,
+                            io.grpc.stub.StreamObserver<inference.GrpcService.RepositoryModelLoadResponse>
+                                    responseObserver) {
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
                         if (!tritonModelRepoStub.contains(request.getModelName())) {
                             responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
                         } else {
-                            responseObserver
-                                    .onNext(inference.GrpcService.RepositoryModelLoadResponse.getDefaultInstance());
+                            responseObserver.onNext(
+                                    inference.GrpcService.RepositoryModelLoadResponse.getDefaultInstance());
                             responseObserver.onCompleted();
                         }
                     }
 
                     @Override
-                    public void repositoryModelUnload(RepositoryModelUnloadRequest request,
+                    public void repositoryModelUnload(
+                            RepositoryModelUnloadRequest request,
                             StreamObserver<RepositoryModelUnloadResponse> responseObserver) {
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
                         if (!tritonModelRepoStub.contains(request.getModelName())) {
                             responseObserver.onError(new StatusRuntimeException(Status.INVALID_ARGUMENT));
                         } else {
-                            responseObserver
-                                    .onNext(inference.GrpcService.RepositoryModelUnloadResponse.getDefaultInstance());
+                            responseObserver.onNext(
+                                    inference.GrpcService.RepositoryModelUnloadResponse.getDefaultInstance());
                             responseObserver.onCompleted();
                         }
                     }
 
                     @Override
-                    public void repositoryIndex(RepositoryIndexRequest request,
-                            StreamObserver<RepositoryIndexResponse> responseObserver) {
+                    public void repositoryIndex(
+                            RepositoryIndexRequest request, StreamObserver<RepositoryIndexResponse> responseObserver) {
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
 
-                        ModelIndex modelIndex = ModelIndex.newBuilder().setName("myModel").build();
-                        RepositoryIndexResponse response = RepositoryIndexResponse.newBuilder().addModels(modelIndex)
+                        ModelIndex modelIndex =
+                                ModelIndex.newBuilder().setName("myModel").build();
+                        RepositoryIndexResponse response = RepositoryIndexResponse.newBuilder()
+                                .addModels(modelIndex)
                                 .build();
                         responseObserver.onNext(response);
                         responseObserver.onCompleted();
                     }
 
                     @Override
-                    public void modelMetadata(ModelMetadataRequest request,
-                            StreamObserver<ModelMetadataResponse> responseObserver) {
+                    public void modelMetadata(
+                            ModelMetadataRequest request, StreamObserver<ModelMetadataResponse> responseObserver) {
 
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
 
-                        ModelMetadataResponse response = ModelMetadataResponse.newBuilder().setPlatform("platform")
+                        ModelMetadataResponse response = ModelMetadataResponse.newBuilder()
+                                .setPlatform("platform")
                                 .setName("name")
-                                .addInputs(TensorMetadata.newBuilder().setName("tensorName").setDatatype("UINT64")
-                                        .addShape(1l).build())
-                                .addOutputs(TensorMetadata.newBuilder().setName("tensorName").setDatatype("UINT64")
-                                        .addShape(1l).build())
+                                .addInputs(TensorMetadata.newBuilder()
+                                        .setName("tensorName")
+                                        .setDatatype("UINT64")
+                                        .addShape(1l)
+                                        .build())
+                                .addOutputs(TensorMetadata.newBuilder()
+                                        .setName("tensorName")
+                                        .setDatatype("UINT64")
+                                        .addShape(1l)
+                                        .build())
                                 .build();
 
                         responseObserver.onNext(response);
@@ -503,150 +540,251 @@ public abstract class TritonServerServiceStepDefinitions extends TritonServerSer
                     }
 
                     @Override
-                    public void modelInfer(ModelInferRequest request,
-                            StreamObserver<ModelInferResponse> responseObserver) {
+                    public void modelInfer(
+                            ModelInferRequest request, StreamObserver<ModelInferResponse> responseObserver) {
 
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
 
                         List<InferOutputTensor> outputTensor = new ArrayList<>();
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("FP64").setName("name1")
-                                .setContents(InferTensorContents.newBuilder().addFp64Contents(34.76d).build())
-                                .addShape(0).setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("BOOL").setName("name2")
-                                .setContents(InferTensorContents.newBuilder().addBoolContents(true).build()).addShape(1)
-                                .setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("BYTES").setName("name3")
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("FP64")
+                                .setName("name1")
                                 .setContents(InferTensorContents.newBuilder()
-                                        .addBytesContents(ByteString.copyFrom(new byte[] { 10, 20, -10, -20 })).build())
-                                .addShape(0).setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("FP32").setName("name4")
-                                .setContents(InferTensorContents.newBuilder().addFp32Contents(134.76f).build())
-                                .addShape(1).setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("INT64").setName("name5")
-                                .setContents(InferTensorContents.newBuilder().addInt64Contents(56436l).build())
-                                .addShape(0).setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("INT32").setName("name6")
-                                .setContents(InferTensorContents.newBuilder().addIntContents(45465).build()).addShape(0)
-                                .setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("UINT64").setName("name7")
-                                .setContents(InferTensorContents.newBuilder().addUint64Contents(536456l).build())
-                                .addShape(1).setShape(0, 0).build());
-                        outputTensor.add(InferOutputTensor.newBuilder().setDatatype("UINT32").setName("name8")
-                                .setContents(InferTensorContents.newBuilder().addUintContents(53645).build())
-                                .addShape(0).setShape(0, 0).build());
+                                        .addFp64Contents(34.76d)
+                                        .build())
+                                .addShape(0)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("BOOL")
+                                .setName("name2")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addBoolContents(true)
+                                        .build())
+                                .addShape(1)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("BYTES")
+                                .setName("name3")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addBytesContents(ByteString.copyFrom(new byte[] {10, 20, -10, -20}))
+                                        .build())
+                                .addShape(0)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("FP32")
+                                .setName("name4")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addFp32Contents(134.76f)
+                                        .build())
+                                .addShape(1)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("INT64")
+                                .setName("name5")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addInt64Contents(56436l)
+                                        .build())
+                                .addShape(0)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("INT32")
+                                .setName("name6")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addIntContents(45465)
+                                        .build())
+                                .addShape(0)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("UINT64")
+                                .setName("name7")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addUint64Contents(536456l)
+                                        .build())
+                                .addShape(1)
+                                .setShape(0, 0)
+                                .build());
+                        outputTensor.add(InferOutputTensor.newBuilder()
+                                .setDatatype("UINT32")
+                                .setName("name8")
+                                .setContents(InferTensorContents.newBuilder()
+                                        .addUintContents(53645)
+                                        .build())
+                                .addShape(0)
+                                .setShape(0, 0)
+                                .build());
 
                         List<ByteString> rawOutputTensor = new ArrayList<>();
                         rawOutputTensor.add(ByteString.copyFrom(convertDoubleToByteArray(34.76d)));
                         rawOutputTensor.add(ByteString.copyFrom(convertBooleanToByteArray(true)));
-                        rawOutputTensor.add(ByteString.copyFrom(new byte[] { 10, 20, -10, -20 }));
+                        rawOutputTensor.add(ByteString.copyFrom(new byte[] {10, 20, -10, -20}));
                         rawOutputTensor.add(ByteString.copyFrom(convertFloatToByteArray(134.76f)));
                         rawOutputTensor.add(ByteString.copyFrom(convertLongToByteArray(56436l)));
                         rawOutputTensor.add(ByteString.copyFrom(convertIntegerToByteArray(45465)));
                         rawOutputTensor.add(ByteString.copyFrom(convertLongToByteArray(536456l)));
                         rawOutputTensor.add(ByteString.copyFrom(convertIntegerToByteArray(53645)));
 
-                        ModelInferResponse response = ModelInferResponse.newBuilder().addAllOutputs(outputTensor)
-                                .addAllRawOutputContents(rawOutputTensor).build();
+                        ModelInferResponse response = ModelInferResponse.newBuilder()
+                                .addAllOutputs(outputTensor)
+                                .addAllRawOutputContents(rawOutputTensor)
+                                .build();
 
                         responseObserver.onNext(response);
                         responseObserver.onCompleted();
-
                     }
 
                     @Override
-                    public void serverLive(ServerLiveRequest request,
-                            StreamObserver<ServerLiveResponse> responseObserver) {
+                    public void serverLive(
+                            ServerLiveRequest request, StreamObserver<ServerLiveResponse> responseObserver) {
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
 
-                        ServerLiveResponse response = ServerLiveResponse.newBuilder().setLive(true).build();
+                        ServerLiveResponse response =
+                                ServerLiveResponse.newBuilder().setLive(true).build();
                         responseObserver.onNext(response);
                         responseObserver.onCompleted();
                     }
 
                     @Override
-                    public void modelStatistics(ModelStatisticsRequest request,
-                            StreamObserver<ModelStatisticsResponse> responseObserver) {
+                    public void modelStatistics(
+                            ModelStatisticsRequest request, StreamObserver<ModelStatisticsResponse> responseObserver) {
                         TritonServerServiceStepDefinitions.this.methodCalled = true;
 
                         if (metricsEnabled) {
                             InferStatistics.Builder firstInferStatisticsBuilder = InferStatistics.newBuilder();
-                            firstInferStatisticsBuilder
-                                    .setSuccess(StatisticDuration.newBuilder().setCount(42).setNs(30097440).build());
-                            firstInferStatisticsBuilder
-                                    .setFail(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
-                            firstInferStatisticsBuilder
-                                    .setQueue(StatisticDuration.newBuilder().setCount(42).setNs(7137056).build());
-                            firstInferStatisticsBuilder
-                                    .setComputeInput(StatisticDuration.newBuilder().setCount(42).setNs(532768).build());
-                            firstInferStatisticsBuilder.setComputeInfer(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(4664640).build());
-                            firstInferStatisticsBuilder
-                                    .setComputeOutput(StatisticDuration.newBuilder().setCount(42).setNs(4736).build());
-                            firstInferStatisticsBuilder
-                                    .setCacheHit(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
-                            firstInferStatisticsBuilder
-                                    .setCacheMiss(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
+                            firstInferStatisticsBuilder.setSuccess(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(30097440)
+                                    .build());
+                            firstInferStatisticsBuilder.setFail(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
+                            firstInferStatisticsBuilder.setQueue(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(7137056)
+                                    .build());
+                            firstInferStatisticsBuilder.setComputeInput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(532768)
+                                    .build());
+                            firstInferStatisticsBuilder.setComputeInfer(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(4664640)
+                                    .build());
+                            firstInferStatisticsBuilder.setComputeOutput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(4736)
+                                    .build());
+                            firstInferStatisticsBuilder.setCacheHit(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
+                            firstInferStatisticsBuilder.setCacheMiss(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
 
-                            InferBatchStatistics.Builder firstInferBatchStatisticsBuilder = InferBatchStatistics
-                                    .newBuilder();
+                            InferBatchStatistics.Builder firstInferBatchStatisticsBuilder =
+                                    InferBatchStatistics.newBuilder();
                             firstInferBatchStatisticsBuilder.setBatchSize(1);
-                            firstInferBatchStatisticsBuilder
-                                    .setComputeInput(StatisticDuration.newBuilder().setCount(42).setNs(532768).build());
-                            firstInferBatchStatisticsBuilder.setComputeInfer(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(4664640).build());
-                            firstInferBatchStatisticsBuilder
-                                    .setComputeOutput(StatisticDuration.newBuilder().setCount(42).setNs(4736).build());
+                            firstInferBatchStatisticsBuilder.setComputeInput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(532768)
+                                    .build());
+                            firstInferBatchStatisticsBuilder.setComputeInfer(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(4664640)
+                                    .build());
+                            firstInferBatchStatisticsBuilder.setComputeOutput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(4736)
+                                    .build());
 
                             ModelStatistics.Builder firstModelStatisticsBuilder = ModelStatistics.newBuilder();
-                            firstModelStatisticsBuilder.setName("identity_long").setVersion("1")
-                                    .setLastInference(1739867342484L).setInferenceCount(42).setExecutionCount(42)
+                            firstModelStatisticsBuilder
+                                    .setName("identity_long")
+                                    .setVersion("1")
+                                    .setLastInference(1739867342484L)
+                                    .setInferenceCount(42)
+                                    .setExecutionCount(42)
                                     .setInferenceStats(firstInferStatisticsBuilder.build())
                                     .addBatchStats(firstInferBatchStatisticsBuilder.build());
 
                             InferStatistics.Builder secondInferStatisticsBuilder = InferStatistics.newBuilder();
-                            secondInferStatisticsBuilder
-                                    .setSuccess(StatisticDuration.newBuilder().setCount(42).setNs(278516928).build());
-                            secondInferStatisticsBuilder
-                                    .setFail(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
-                            secondInferStatisticsBuilder
-                                    .setQueue(StatisticDuration.newBuilder().setCount(42).setNs(8943104).build());
-                            secondInferStatisticsBuilder.setComputeInput(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(11304704).build());
-                            secondInferStatisticsBuilder.setComputeInfer(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(230288448).build());
-                            secondInferStatisticsBuilder.setComputeOutput(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(26880672).build());
-                            secondInferStatisticsBuilder
-                                    .setCacheHit(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
-                            secondInferStatisticsBuilder
-                                    .setCacheMiss(StatisticDuration.newBuilder().setCount(0).setNs(0).build());
+                            secondInferStatisticsBuilder.setSuccess(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(278516928)
+                                    .build());
+                            secondInferStatisticsBuilder.setFail(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
+                            secondInferStatisticsBuilder.setQueue(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(8943104)
+                                    .build());
+                            secondInferStatisticsBuilder.setComputeInput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(11304704)
+                                    .build());
+                            secondInferStatisticsBuilder.setComputeInfer(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(230288448)
+                                    .build());
+                            secondInferStatisticsBuilder.setComputeOutput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(26880672)
+                                    .build());
+                            secondInferStatisticsBuilder.setCacheHit(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
+                            secondInferStatisticsBuilder.setCacheMiss(StatisticDuration.newBuilder()
+                                    .setCount(0)
+                                    .setNs(0)
+                                    .build());
 
-                            InferBatchStatistics.Builder secondInferBatchStatisticsBuilder = InferBatchStatistics
-                                    .newBuilder();
+                            InferBatchStatistics.Builder secondInferBatchStatisticsBuilder =
+                                    InferBatchStatistics.newBuilder();
                             secondInferBatchStatisticsBuilder.setBatchSize(1);
-                            secondInferBatchStatisticsBuilder.setComputeInput(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(11304704).build());
-                            secondInferBatchStatisticsBuilder.setComputeInfer(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(230288448).build());
-                            secondInferBatchStatisticsBuilder.setComputeOutput(
-                                    StatisticDuration.newBuilder().setCount(42).setNs(26880672).build());
+                            secondInferBatchStatisticsBuilder.setComputeInput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(11304704)
+                                    .build());
+                            secondInferBatchStatisticsBuilder.setComputeInfer(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(230288448)
+                                    .build());
+                            secondInferBatchStatisticsBuilder.setComputeOutput(StatisticDuration.newBuilder()
+                                    .setCount(42)
+                                    .setNs(26880672)
+                                    .build());
 
                             ModelStatistics.Builder secondModelStatisticsBuilder = ModelStatistics.newBuilder();
-                            secondModelStatisticsBuilder.setName("preprocessor").setVersion("1")
-                                    .setLastInference(1739867342480L).setInferenceCount(42).setExecutionCount(42)
+                            secondModelStatisticsBuilder
+                                    .setName("preprocessor")
+                                    .setVersion("1")
+                                    .setLastInference(1739867342480L)
+                                    .setInferenceCount(42)
+                                    .setExecutionCount(42)
                                     .setInferenceStats(secondInferStatisticsBuilder.build())
                                     .addBatchStats(secondInferBatchStatisticsBuilder.build());
 
                             ModelStatisticsResponse response = ModelStatisticsResponse.newBuilder()
                                     .addModelStats(firstModelStatisticsBuilder.build())
-                                    .addModelStats(secondModelStatisticsBuilder.build()).build();
+                                    .addModelStats(secondModelStatisticsBuilder.build())
+                                    .build();
                             responseObserver.onNext(response);
                             responseObserver.onCompleted();
                         } else {
                             responseObserver.onError(new StatusRuntimeException(Status.UNAVAILABLE));
                         }
                     }
-
                 }));
     }
 

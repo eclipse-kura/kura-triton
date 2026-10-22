@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +28,6 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import org.apache.commons.io.FileUtils;
 import org.eclipse.kura.KuraIOException;
 import org.junit.After;
@@ -38,7 +36,8 @@ import org.junit.Test;
 
 public class TritonServerEncryptionUtilsTest {
 
-    private static final String WORKDIR = Paths.get(System.getProperty("java.io.tmpdir"), "decr_folder").toString();
+    private static final String WORKDIR =
+            Paths.get(System.getProperty("java.io.tmpdir"), "decr_folder").toString();
     private boolean exceptionOccurred = false;
     private String tempDirectoryPrefix;
     private String tempDirectoryPath;
@@ -468,8 +467,8 @@ public class TritonServerEncryptionUtilsTest {
 
     private void thenTargetFolderHasPermissions(String folderPath, String permissions) {
         try {
-            Set<PosixFilePermission> readPermissions = Files.getPosixFilePermissions(Paths.get(folderPath),
-                    LinkOption.NOFOLLOW_LINKS);
+            Set<PosixFilePermission> readPermissions =
+                    Files.getPosixFilePermissions(Paths.get(folderPath), LinkOption.NOFOLLOW_LINKS);
             Set<PosixFilePermission> expectedPermissions = PosixFilePermissions.fromString(permissions);
 
             assertEquals(expectedPermissions, readPermissions);

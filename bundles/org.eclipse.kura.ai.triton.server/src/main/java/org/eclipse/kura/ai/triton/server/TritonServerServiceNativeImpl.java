@@ -18,8 +18,10 @@ import org.eclipse.kura.executor.CommandExecutorService;
 public class TritonServerServiceNativeImpl extends TritonServerServiceAbs {
 
     @Override
-    TritonServerInstanceManager createInstanceManager(TritonServerServiceOptions options,
-            CommandExecutorService executorService, ContainerOrchestrationService orchestrationService,
+    TritonServerInstanceManager createInstanceManager(
+            TritonServerServiceOptions options,
+            CommandExecutorService executorService,
+            ContainerOrchestrationService orchestrationService,
             String decryptionFolderPath) {
         return new TritonServerNativeManager(options, executorService, decryptionFolderPath);
     }

@@ -88,14 +88,13 @@
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <outputDirectory>${project.basedir}/lib</outputDirectory>
-                            <includeArtifactIds>
-                                grpc-api,
+                            <includeArtifactIds>grpc-api,
                                 grpc-context,
                                 grpc-core,
                                 grpc-netty-shaded,
@@ -103,8 +102,7 @@
                                 grpc-protobuf-lite,
                                 grpc-stub,
                                 perfmark-api,
-                                protobuf-java-util
-                            </includeArtifactIds>
+                                protobuf-java-util</includeArtifactIds>
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
@@ -116,10 +114,10 @@
                 <version>1.7.0</version>
                 <executions>
                     <execution>
-                        <phase>initialize</phase>
                         <goals>
                             <goal>detect</goal>
                         </goals>
+                        <phase>initialize</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -134,14 +132,14 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <configuration>
-                            <pluginParameter>@generated=omit</pluginParameter>
-                        </configuration>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>compile</goal>
                             <goal>compile-custom</goal>
                         </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <pluginParameter>@generated=omit</pluginParameter>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -151,10 +149,10 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
                         <goals>
                             <goal>add-source</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                         <configuration>
                             <sources>
                                 <source>${project.build.directory}/generated-sources/protobuf/java</source>

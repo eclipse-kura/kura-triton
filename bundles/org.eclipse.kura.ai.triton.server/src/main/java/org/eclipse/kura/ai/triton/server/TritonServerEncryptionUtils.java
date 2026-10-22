@@ -10,7 +10,6 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import java.io.BufferedInputStream;
@@ -30,7 +29,6 @@ import java.security.Security;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -53,8 +51,7 @@ public class TritonServerEncryptionUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(TritonServerEncryptionUtils.class);
 
-    private TritonServerEncryptionUtils() {
-    }
+    private TritonServerEncryptionUtils() {}
 
     protected static String getEncryptedModelPath(String modelName, String folderPath) throws KuraIOException {
         if (!Files.isDirectory(Paths.get(folderPath))) {
@@ -73,8 +70,8 @@ public class TritonServerEncryptionUtils {
     }
 
     protected static String createDecryptionFolder(String prefix) throws IOException {
-        Set<PosixFilePermission> permissions = new HashSet<>(Arrays.asList(PosixFilePermission.OWNER_READ,
-                PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE));
+        Set<PosixFilePermission> permissions = new HashSet<>(Arrays.asList(
+                PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE));
         Path tempFolderPath = Files.createTempDirectory(prefix, PosixFilePermissions.asFileAttribute(permissions));
 
         logger.debug("Created temporary directory at path {}", tempFolderPath);
@@ -154,8 +151,11 @@ public class TritonServerEncryptionUtils {
         }
 
         PGPPBEEncryptedData pbe = (PGPPBEEncryptedData) enc.get(0);
-        InputStream clear = pbe.getDataStream(new JcePBEDataDecryptorFactoryBuilder(
-                new JcaPGPDigestCalculatorProviderBuilder().setProvider("BC").build()).setProvider("BC")
+        InputStream clear =
+                pbe.getDataStream(new JcePBEDataDecryptorFactoryBuilder(new JcaPGPDigestCalculatorProviderBuilder()
+                                .setProvider("BC")
+                                .build())
+                        .setProvider("BC")
                         .build(password.toCharArray()));
 
         pgpFactory = new JcaPGPObjectFactory(clear);

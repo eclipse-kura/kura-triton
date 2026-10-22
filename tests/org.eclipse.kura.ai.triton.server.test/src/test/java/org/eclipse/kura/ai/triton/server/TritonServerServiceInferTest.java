@@ -13,7 +13,6 @@
 package org.eclipse.kura.ai.triton.server;
 
 import java.io.IOException;
-
 import org.junit.Test;
 
 public class TritonServerServiceInferTest extends TritonServerServiceStepDefinitions {
@@ -26,5 +25,4 @@ public class TritonServerServiceInferTest extends TritonServerServiceStepDefinit
 
         thenTensorsAreReturned();
     }
-
 }

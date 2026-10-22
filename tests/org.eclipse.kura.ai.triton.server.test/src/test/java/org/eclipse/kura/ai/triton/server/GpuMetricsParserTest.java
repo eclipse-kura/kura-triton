@@ -19,7 +19,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.eclipse.kura.ai.triton.server.metrics.parser.GpuMetricsParser;
 import org.junit.Test;
 
@@ -82,17 +81,20 @@ public class GpuMetricsParserTest {
             + "# HELP nv_energy_consumption GPU energy consumption in joules since the Triton Server started\n" //
             + "# TYPE nv_energy_consumption counter\n" //
             + "nv_energy_consumption{gpu_uuid=\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\"} 320.387000\n";
-    private static final String SINGLE_GPU_METRIC_WITHOUT_UUID = "# HELP nv_gpu_utilization GPU utilization rate [0.0 - 1.0)\n" //
-            + "# TYPE nv_gpu_utilization gauge\n" //
-            + "nv_gpu_utilization{} 0.000000\n";
-    private static final String SINGLE_GPU_METRIC_WITHOUT_NAME = "# HELP nv_gpu_utilization GPU utilization rate [0.0 - 1.0)\n" //
-            + "# TYPE nv_gpu_utilization gauge\n" //
-            + "{gpu_uuid=\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\"} 0.000000\n";
+    private static final String SINGLE_GPU_METRIC_WITHOUT_UUID =
+            "# HELP nv_gpu_utilization GPU utilization rate [0.0 - 1.0)\n" //
+                    + "# TYPE nv_gpu_utilization gauge\n" //
+                    + "nv_gpu_utilization{} 0.000000\n";
+    private static final String SINGLE_GPU_METRIC_WITHOUT_NAME =
+            "# HELP nv_gpu_utilization GPU utilization rate [0.0 - 1.0)\n" //
+                    + "# TYPE nv_gpu_utilization gauge\n" //
+                    + "{gpu_uuid=\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\"} 0.000000\n";
     private static final String EXPECTED_GPU_METRIC_1 = "{\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ed\"," //
             + "\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\",\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\"," //
             + "\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}";
-    private static final String EXPECTED_GPU_METRIC_2 = "{\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
-            + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}";
+    private static final String EXPECTED_GPU_METRIC_2 =
+            "{\"gpuUuid\":\"GPU-340cec52-80ba-c0df-8511-5f9680aae0ff\",\"gpuStats\":{\"nvGpuMemoryTotalBytes\":\"16101933056.000000\"," //
+                    + "\"nvGpuPowerUsage\":\"20.085000\",\"nvGpuUtilization\":\"0.000000\",\"nvGpuPowerLimit\":\"60.000000\",\"nvGpuMemoryUsedBytes\":\"617611264.000000\"}}";
 
     @Test
     public void shouldParseSingleGpuMetric() {

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-
 import org.eclipse.kura.KuraErrorCode;
 import org.eclipse.kura.KuraRuntimeException;
 
@@ -146,7 +145,6 @@ public class TritonServerServiceOptions {
         } else {
             this.devices = new ArrayList<>();
         }
-
     }
 
     public String getAddress() {
@@ -202,7 +200,8 @@ public class TritonServerServiceOptions {
         List<String> backendsConfigs = new ArrayList<>();
         final Object propertyBackendsConfig = this.properties.get(PROPERTY_LOCAL_BACKENDS_CONFIG);
         if (propertyBackendsConfig instanceof String && !((String) propertyBackendsConfig).isEmpty()) {
-            backendsConfigs = Arrays.asList(((String) propertyBackendsConfig).trim().split(";"));
+            backendsConfigs =
+                    Arrays.asList(((String) propertyBackendsConfig).trim().split(";"));
         }
         return backendsConfigs;
     }
@@ -274,20 +273,20 @@ public class TritonServerServiceOptions {
             String stringValue = value.get().trim();
             long result = 0;
             switch (stringValue.charAt(stringValue.length() - 1)) {
-            case 'b':
-                result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1));
-                break;
-            case 'k':
-                result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1024L;
-                break;
-            case 'm':
-                result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1048576L;
-                break;
-            case 'g':
-                result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1073741824L;
-                break;
-            default:
-                result = Long.parseLong(stringValue);
+                case 'b':
+                    result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1));
+                    break;
+                case 'k':
+                    result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1024L;
+                    break;
+                case 'm':
+                    result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1048576L;
+                    break;
+                case 'g':
+                    result = Long.parseLong(stringValue.substring(0, stringValue.length() - 1)) * 1073741824L;
+                    break;
+                default:
+                    result = Long.parseLong(stringValue);
             }
             return Optional.of(result);
         } else {
@@ -313,7 +312,13 @@ public class TritonServerServiceOptions {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.grpcPort, this.httpPort, this.isLocal, this.metricsPort, this.timeout, this.nRetries,
+        return Objects.hash(
+                this.grpcPort,
+                this.httpPort,
+                this.isLocal,
+                this.metricsPort,
+                this.timeout,
+                this.nRetries,
                 this.properties);
     }
 
@@ -326,11 +331,15 @@ public class TritonServerServiceOptions {
             return false;
         }
         TritonServerServiceOptions other = (TritonServerServiceOptions) obj;
-        return this.grpcPort == other.grpcPort && this.httpPort == other.httpPort && this.isLocal == other.isLocal
-                && this.metricsPort == other.metricsPort && this.timeout == other.timeout
-                && this.containerCpus == other.containerCpus && this.containerGpus == other.containerGpus
-                && this.containerMemory == other.containerMemory && this.nRetries == other.nRetries
+        return this.grpcPort == other.grpcPort
+                && this.httpPort == other.httpPort
+                && this.isLocal == other.isLocal
+                && this.metricsPort == other.metricsPort
+                && this.timeout == other.timeout
+                && this.containerCpus == other.containerCpus
+                && this.containerGpus == other.containerGpus
+                && this.containerMemory == other.containerMemory
+                && this.nRetries == other.nRetries
                 && Objects.equals(this.properties, other.properties);
     }
-
 }

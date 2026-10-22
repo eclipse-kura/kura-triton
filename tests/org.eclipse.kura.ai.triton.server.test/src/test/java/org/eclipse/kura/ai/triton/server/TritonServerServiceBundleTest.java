@@ -10,11 +10,9 @@
  * Contributors:
  *  Eurotech
  ******************************************************************************/
-
 package org.eclipse.kura.ai.triton.server;
 
 import java.io.IOException;
-
 import org.junit.Test;
 
 public class TritonServerServiceBundleTest extends TritonServerServiceStepDefinitions {
@@ -55,5 +53,4 @@ public class TritonServerServiceBundleTest extends TritonServerServiceStepDefini
 
         thenNoExceptionIsCaught();
     }
-
 }

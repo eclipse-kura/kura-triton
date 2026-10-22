@@ -13,9 +13,7 @@
      Eurotech
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -28,10 +26,13 @@
     <artifactId>kura-triton.tests</artifactId>
     <packaging>pom</packaging>
 
+    <modules>
+        <module>org.eclipse.kura.ai.triton.server.test</module>
+    </modules>
+
     <properties>
         <kura.workdir>${project.build.directory}/test-env</kura.workdir>
     </properties>
-
 
     <dependencies>
         <dependency>
@@ -64,10 +65,10 @@
                     <executions>
                         <execution>
                             <id>generate-test-env</id>
-                            <phase>generate-test-resources</phase>
                             <goals>
                                 <goal>copy-resources</goal>
                             </goals>
+                            <phase>generate-test-resources</phase>
                             <configuration>
                                 <includeEmptyDirs>true</includeEmptyDirs>
                                 <outputDirectory>${kura.workdir}</outputDirectory>
@@ -93,10 +94,10 @@
                         -->
                         <execution>
                             <id>prepare-tycho-runtime</id>
-                            <phase>prepare-package</phase>
                             <goals>
                                 <goal>copy-resources</goal>
                             </goals>
+                            <phase>prepare-package</phase>
                             <configuration>
                                 <outputDirectory>${basedir}/OSGI-INF</outputDirectory>
                                 <resources>
@@ -116,20 +117,14 @@
                     <executions>
                         <execution>
                             <id>prepare-test-env</id>
-                            <phase>process-test-resources</phase>
                             <goals>
                                 <goal>run</goal>
                             </goals>
+                            <phase>process-test-resources</phase>
                             <configuration>
                                 <target>
-                                    <replace
-                                        file="${kura.workdir}/framework/kura.properties"
-                                        token="/tmp/kura"
-                                        value="${kura.workdir}" />
-                                    <replace
-                                        file="${kura.workdir}/user/snapshots/snapshot_0.xml"
-                                        token="/tmp/kura"
-                                        value="${kura.workdir}" />
+                                    <replace file="${kura.workdir}/framework/kura.properties" token="/tmp/kura" value="${kura.workdir}" />
+                                    <replace file="${kura.workdir}/user/snapshots/snapshot_0.xml" token="/tmp/kura" value="${kura.workdir}" />
                                 </target>
                             </configuration>
                         </execution>
@@ -148,10 +143,10 @@
                         </execution>
                         <execution>
                             <id>report</id>
-                            <phase>verify</phase>
                             <goals>
                                 <goal>report-aggregate</goal>
                             </goals>
+                            <phase>verify</phase>
                         </execution>
                     </executions>
                 </plugin>
@@ -164,8 +159,7 @@
                         <failIfNoTests>false</failIfNoTests>
                         <providerHint>junit4</providerHint>
                         <useUnlimitedThreads>true</useUnlimitedThreads>
-                        <argLine>
-                            ${tycho.testArgLine}
+                        <argLine>${tycho.testArgLine}
                             -Dosgi.console=5002
                             -Dosgi.signedcontent.support=all
                             -XX:HeapDumpPath=/dev/null
@@ -175,8 +169,7 @@
                             -Ddpa.configuration=${kura.workdir}/data/dpa.properties
                             -Dkura.data=${kura.workdir}/data
                             -Dkura.snapshots=${kura.workdir}/user/snapshots
-                            -Dlog4j.configurationFile=file:${kura.workdir}/log4j/log4j.xml
-                        </argLine>
+                            -Dlog4j.configurationFile=file:${kura.workdir}/log4j/log4j.xml</argLine>
                         <!--
                         uncomment for gogo shell, usage: telnet localhost 5002
                         <appArgLine>-consoleLog -console 5002 -noExit</appArgLine> -->
@@ -198,23 +191,23 @@
                         </bundleStartLevel>
                     </configuration>
                 </plugin>
-                
+
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.22.2</version>
+                    <configuration />
                     <executions>
                         <execution>
                             <id>default-test</id>
-                            <phase>test</phase>
                             <goals>
                                 <goal>test</goal>
                             </goals>
+                            <phase>test</phase>
                             <configuration>
                                 <argLine>${tycho.testArgLine}</argLine>
                             </configuration>
                         </execution>
                     </executions>
-                    <configuration/>
                 </plugin>
 
                 <plugin>
@@ -388,9 +381,5 @@
             </build>
         </profile>
     </profiles>
-
-    <modules>
-        <module>org.eclipse.kura.ai.triton.server.test</module>
-    </modules>
 
 </project>
